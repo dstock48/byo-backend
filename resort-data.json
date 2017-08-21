@@ -1,0 +1,32 @@
+[
+  {
+    "elevation": {
+      "base": 3931,
+      "summit": 5774
+    },
+    "resortName": "49 Degrees North",
+    "skiableAcreage": 2325,
+    "trailInfo": {
+      "advanced": "25%",
+      "beginner": "30%",
+      "expert": "5%",
+      "intermediate": "40%"
+    },
+    "trailTotal": 82
+  },
+  {
+    "elevation": {
+      "base": 1180,
+      "summit": 1530
+    },
+    "resortName": "Afton Alps",
+    "skiableAcreage": 250,
+    "trailInfo": {
+      "advanced": "17%",
+      "beginner": "42%",
+      "expert": "0%",
+      "intermediate": "42%"
+    },
+    "trailTotal": 48
+  }
+]
