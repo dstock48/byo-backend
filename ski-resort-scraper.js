@@ -11,7 +11,7 @@ const resortURLs = new Promise((res, rej) => {
       const resortList = document.querySelectorAll('.resortList tr .name a')
 
       let resortURLs = []
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 10; i++) {
           let link = resortList[i].href
           resortURLs.push(link)
         }
@@ -51,13 +51,19 @@ function scrapeResortData(url, result) {
     .wait(2000)
     .evaluate(() => {
       let resortTerrain = document.querySelector('#resort_terrain');
-      let resortElevation = document.querySelector('#resort_elevation')
+      let resortElevation = document.querySelector('#resort_elevation');
+      let resortImportantDates = document.querySelector('#resort_impdates');
 
       // create empty array
       let resortInfo = {
         resortName: document.querySelector('.resort_name').textContent,
-        // state: document.querySelector('.rel_regions a:first-child').textContent,
+        state: document.querySelector('.rel_regions a').textContent,
+        annualSnowfall: parseInt(document.querySelectorAll('#resort_impdates ul li strong')[document.querySelectorAll('#resort_impdates ul li').length-1].textContent),
         trailTotal: parseInt(resortTerrain.querySelector('ul:nth-child(2) li:first-child .value').textContent),
+        dates: {
+          projectedOpen: new Date(resortImportantDates.querySelector('li:nth-child(1) strong').textContent),
+          daysOpenLastYear: parseInt(resortImportantDates.querySelector('li:nth-child(2) strong').textContent)
+        },
         trailInfo: {
           beginner: resortTerrain.querySelector('.value.beginner').textContent,
           intermediate: resortTerrain.querySelector('.value.intermediate').textContent,
