@@ -4,7 +4,7 @@ module.exports = {
 
   development: {
     client: 'pg',
-    connection: 'postgres://localhost/byo-backend',
+    connection: 'postgres://localhost/byo_backend',
     migrations: {
       directory: './db/migrations'
     },
@@ -16,7 +16,7 @@ module.exports = {
 
   test: {
     client: 'pg',
-    connection: process.env.DATABASE_URL || 'postgres://localhost/byo-backend-test',
+    connection: process.env.DATABASE_URL || 'postgres://localhost/byo_backend_test',
     migrations: {
       directory: './db/migrations'
     },

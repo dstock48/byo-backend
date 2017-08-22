@@ -10,4 +10,4 @@ deployment:
   staging:
     branch: master
     heroku:
-      appname: byo-backend
+      appname: winter-resort-api
