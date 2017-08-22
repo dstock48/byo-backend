@@ -56,25 +56,18 @@ function scrapeResortData(url, result) {
 
       // create empty array
       let resortInfo = {
-        resortName: document.querySelector('.resort_name').textContent,
-        state: document.querySelector('.rel_regions a').textContent,
-        annualSnowfall: parseInt(document.querySelectorAll('#resort_impdates ul li strong')[document.querySelectorAll('#resort_impdates ul li').length-1].textContent),
-        trailTotal: parseInt(resortTerrain.querySelector('ul:nth-child(2) li:first-child .value').textContent),
-        dates: {
-          projectedOpen: new Date(resortImportantDates.querySelector('li:nth-child(1) strong').textContent),
-          daysOpenLastYear: parseInt(resortImportantDates.querySelector('li:nth-child(2) strong').textContent)
-        },
-        trailInfo: {
-          beginner: resortTerrain.querySelector('.value.beginner').textContent,
-          intermediate: resortTerrain.querySelector('.value.intermediate').textContent,
-          advanced: resortTerrain.querySelector('.value.advanced').textContent,
-          expert: resortTerrain.querySelector('.value.expert').textContent
-        },
-        elevation: {
-          summit: parseInt(resortElevation.querySelector('.top .value').textContent),
-          base: parseInt(resortElevation.querySelector('.bottom .value').textContent)
-        },
-        // skiableAcreage: parseInt(resortTerrain.querySelector('ul:nth-child(3) li:first-child .value').textContent)
+        state_name: document.querySelector('.rel_regions a').textContent,
+        resort_name: document.querySelector('.resort_name').textContent,
+        trail_total: parseInt(resortTerrain.querySelector('ul:nth-child(2) li:first-child .value').textContent),
+        projected_open_date: new Date(resortImportantDates.querySelector('li:nth-child(1) strong').textContent),
+        annual_snowfall: parseInt(document.querySelectorAll('#resort_impdates ul li strong')[document.querySelectorAll('#resort_impdates ul li').length-1].textContent),
+        days_open_last_year: parseInt(resortImportantDates.querySelector('li:nth-child(2) strong').textContent),
+        beginner_trail_percent: parseInt(resortTerrain.querySelector('.value.beginner').textContent) / 100,
+        intermediate_trail_percent: parseInt(resortTerrain.querySelector('.value.intermediate').textContent) / 100,
+        advanced_trail_percent: parseInt(resortTerrain.querySelector('.value.advanced').textContent) / 100,
+        expert_trail_percent: parseInt(resortTerrain.querySelector('.value.expert').textContent) / 100,
+        summit_elevation: parseInt(resortElevation.querySelector('.top .value').textContent),
+        base_elevation: parseInt(resortElevation.querySelector('.bottom .value').textContent)
       }
       return resortInfo
     })
