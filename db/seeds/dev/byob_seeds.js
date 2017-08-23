@@ -16,14 +16,11 @@ exports.seed = (knex, Promise) => {
       .then(statesArray => {
         return Promise.all([
           knex('resorts').insert(resorts.map((resort) => {
-            const thisState = statesArray.find((state) => {
-              console.log(state[0].state_name, 'stste');
-              return state[0].state_name.toLowerCase() === resort.state_name.toLowerCase()
-            });
-
-             console.log(resort.state_name);
-             console.log(this.state);
-            return Object.assign(resort, {states_id: parseInt(thisState.id)})
+            console.log(resort);
+            const stateMatch = statesArray[0].find(state => {
+              return state.state_name.toLowerCase() === resort.state_name.toLowerCase()
+            })
+            return Object.assign(resort, {states_id: parseInt(stateMatch.id)})
           }))
         ])
       })
