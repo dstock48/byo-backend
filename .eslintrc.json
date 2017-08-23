@@ -4,6 +4,7 @@
         "import"
     ],
     "rules": {
-      "radix": [0]
+      "radix": [0],
+      "arrow-body-style": 0
     }
 }
