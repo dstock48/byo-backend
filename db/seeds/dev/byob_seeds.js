@@ -1,5 +1,5 @@
 const states = require('../../../states');
-const resorts = require('../../../resorts')
+const resorts = require('../../../resorts');
 // const trails = require('./trails')
 
 exports.seed = (knex, Promise) => {
@@ -9,21 +9,18 @@ exports.seed = (knex, Promise) => {
     .then(() => knex('states').del())
 
     .then(() => {
-      // Inserts seed entries
-      return Promise.all([
-        knex('states').insert(states,'*')
-      ])
-      .then(statesArray => {
-        return Promise.all([
-          knex('resorts').insert(resorts.map((resort) => {
-            console.log(resort);
-            const stateMatch = statesArray[0].find(state => {
-              return state.state_name.toLowerCase() === resort.state_name.toLowerCase()
-            })
-            return Object.assign(resort, {states_id: parseInt(stateMatch.id)})
-          }))
-        ])
-      })
+      return Promise.all([knex('states').insert(states, '*')])
+        .then((statesArray) => {
+          return Promise.all([
+            knex('resorts').insert(resorts.map((resort) => {
+              console.log(resort);
+              const stateMatch = statesArray[0].find((state) => {
+                return state.state_name.toLowerCase() === resort.state_name.toLowerCase();
+              });
+              return Object.assign(resort, { states_id: parseInt(stateMatch.id) });
+            })),
+          ]);
+        });
     })
-    .catch(err => console.log('ERROR: ', err))
+    .catch(err => console.log('ERROR: ', err));
 };
