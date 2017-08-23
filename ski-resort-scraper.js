@@ -15,7 +15,7 @@ const resortURLs = new Promise((res, rej) => {
       const resortList = document.querySelectorAll('.resortList tr .name a');  //eslint-disable-line
 
       const resortLinks = [];
-      for (let i = 15; i < 25; i += 1) {
+      for (let i = 0; i < 10; i += 1) {
         const link = resortList[i].href;
         resortLinks.push(link);
       }
