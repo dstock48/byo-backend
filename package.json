@@ -10,10 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nightmare": "^2.10.0",
     "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
     "express": "^4.15.4",
+    "jsonwebtoken": "^7.4.3",
     "knex": "^0.13.0",
+    "nightmare": "^2.10.0",
     "nodemon": "^1.11.0",
     "pg": "^7.1.2"
   },
