@@ -1,13 +1,10 @@
-const express = require('express');
-
-const app = express();
-const bodyParser = require('body-parser');
-
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const db = require('knex')(configuration);
+const bodyParser = require('body-parser');
+const express = require('express');
 
-app.set('port', process.env.PORT || 3000);
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -100,24 +97,24 @@ app.post('/api/v1/states', (req, res) => {
 // UPDATE STATE
 app.patch('/api/v1/states/:id', (req, res) => {
   const { id } = req.params;
-  const patch = req.body;
+  const updatedState = req.body;
 
-  if (patch.state_abbreviation.length !== 2) {
+  if (updatedState.state_abbreviation.length !== 2) {
     return res.status(422).json({
       error: 'State abbreviations must be exactly 2 characters.',
     });
   }
-  if (patch.id) {
+  if (updatedState.id) {
     return res.status(422).json({
       error: 'You cannot change the ID.',
     });
   }
-  patch.state_abbreviation = patch.state_abbreviation.toUpperCase();
-  patch.state_name = patch.state_name.charAt(0).toUpperCase() +
-  patch.state_name.slice(1).toLowerCase();
-  db('states').where({ id }).update(patch)
+  updatedState.state_abbreviation = updatedState.state_abbreviation.toUpperCase();
+  updatedState.state_name = updatedState.state_name.charAt(0).toUpperCase() +
+  updatedState.state_name.slice(1).toLowerCase();
+  db('states').where({ id }).update(updatedState)
     .then(() => {
-      res.status(201).json(patch);
+      res.status(201).json(updatedState);
     })
     .catch((error) => {
       res.status(500).json({ error });
@@ -128,9 +125,15 @@ app.patch('/api/v1/states/:id', (req, res) => {
 // DELETE STATE
 app.delete('/api/v1/states/:id', (req, res) => {
   const { id } = req.params;
-  db('states').where({ id }).del()
-    .then(() => {
-      return res.status(204).json(`Success:  The state with ${id} has been successfully deleted!`);
+  db('states').where({ id }).del().returning('*')
+    .then((state) => {
+      if (!state.length) {
+        res.status(404).json({ error: `The state with ID# ${id} was not found and could not be deleted` });
+      }
+      res.status(204).json({
+        success: `The state with ID# ${id} has been successfully deleted!`,
+        deletedStateInfo: state[0],
+      });
     })
     .catch((error) => {
       res.status(500).json({ error });
@@ -228,7 +231,13 @@ app.patch('/api/v1/resorts/:id', (req, res) => {
   const updatedResort = req.body;
   const { id } = req.params;
 
-  db('resorts').where('id', id).select().update(updatedResort, '*')
+  if (updatedResort.id) {
+    return res.status(422).json({
+      error: 'You cannot change the ID.',
+    });
+  }
+
+  db('resorts').where('id', id).update(updatedResort, '*')
     .then((resort) => {
       res.status(201).json(resort);
     })
@@ -241,12 +250,18 @@ app.patch('/api/v1/resorts/:id', (req, res) => {
 app.delete('/api/v1/resorts/:id', (req, res) => {
   const { id } = req.params;
 
-  db('resorts').where('id', id).del()
-    .then(() => {
-      res.status(202).json({ message: `The resort with ID #${id} has been deleted from the database` });
+  db('resorts').where('id', id).del().returning('*')
+    .then((resort) => {
+      if (!resort.length) {
+        return res.status(404).json({ error: `The resort with ID# ${id} was not found and could not be deleted` });
+      }
+      res.status(202).json({
+        success: `The resort with ID# ${id} has been deleted from the database`,
+        deletedResortInfo: resort[0],
+      });
     })
-    .catch(() => {
-      res.status(500).json({ error: `The resort with ID #${id} could not be found and was not deleted` });
+    .catch((err) => {
+      res.status(500).json({ err });
     });
 });
 
@@ -313,16 +328,16 @@ app.post('/api/v1/trails', (req, res) => {
 // UPDATE TRAIL
 app.patch('/api/v1/trails/:id', (req, res) => {
   const { id } = req.params;
-  const patch = req.body;
+  const updatedTrail = req.body;
 
-  if (patch.id) {
+  if (updatedTrail.id) {
     return res.status(422).json({
       error: 'You cannot change the ID.',
     });
   }
-  db('trails').where({ id }).update(patch)
+  db('trails').where({ id }).update(updatedTrail)
     .then(() => {
-      res.status(201).json(patch);
+      res.status(201).json(updatedTrail);
     })
     .catch((error) => {
       res.status(500).json({ error });
@@ -333,9 +348,15 @@ app.patch('/api/v1/trails/:id', (req, res) => {
 // DELETE TRAIL
 app.delete('/api/v1/trails/:id', (req, res) => {
   const { id } = req.params;
-  db('trails').where({ id }).del()
-    .then(() => {
-      res.status(202);
+  db('trails').where({ id }).del().returning('*')
+    .then((trail) => {
+      if (!trail.length) {
+        res.status(404).json({ error: `The trail with ID# ${id} was not found and could not be deleted` });
+      }
+      res.status(202).json({
+        success: `The trail with ID# ${id} has been deleted from the database`,
+        deletedTrailInfo: trail[0],
+      });
     })
     .catch((error) => {
       res.status(500).json({ error });
@@ -343,8 +364,10 @@ app.delete('/api/v1/trails/:id', (req, res) => {
 });
 
 
+app.set('port', process.env.PORT || 3000);
+
 app.listen(app.get('port'), () => {
-  console.log(`BYO-Backend is running on http://localhost:${app.get('port')}`);
+  console.log(`BYO-Backend is running on http://localhost:${app.get('port')}`); //eslint-disable-line
 });
 
 module.exports = app;
