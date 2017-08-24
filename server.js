@@ -128,6 +128,31 @@ app.post('/api/v1/resorts', (req, res) => {
     });
 });
 
+app.patch('/api/v1/resorts/:id', (req, res) => {
+  const updatedResort = req.body;
+  const { id } = req.params;
+
+  db('resorts').where('id', id).select().update(updatedResort, '*')
+    .then((resort) => {
+      res.status(201).json(resort);
+    })
+    .catch((err) => {
+      res.status(500).json({ err });
+    });
+});
+
+app.delete('/api/v1/resorts/:id', (req, res) => {
+  const { id } = req.params;
+
+  db('resorts').where('id', id).del()
+    .then(() => {
+      res.status(202).json({ message: `The resort with ID #${id} has been deleted from the database` });
+    })
+    .catch(() => {
+      res.status(500).json({ error: `The resort with ID #${id} could not be found and was not deleted` });
+    });
+});
+
 app.listen(app.get('port'), () => {
   console.log(`BYO-Backend is running on http://localhost:${app.get('port')}`);  //eslint-disable-line
 });
