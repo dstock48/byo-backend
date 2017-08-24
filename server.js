@@ -225,6 +225,7 @@ app.post('/api/v1/resorts', (req, res) => {
     if (!newResort[param]) {
       return res.status(422).json({ error: `Missing required parameter: ${param}` });
     }
+    return null;
   });
 
   db('resorts').insert(newResort, '*')
@@ -254,6 +255,7 @@ app.patch('/api/v1/resorts/:id', (req, res) => {
     .catch((err) => {
       res.status(500).json({ err });
     });
+  return null;
 });
 
 // DELETE RESORT
@@ -269,6 +271,7 @@ app.delete('/api/v1/resorts/:id', (req, res) => {
         success: `The resort with ID# ${id} has been deleted from the database`,
         deletedResortInfo: resort[0],
       });
+      return null;
     })
     .catch((err) => {
       res.status(500).json({ err });
