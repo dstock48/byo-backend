@@ -146,6 +146,16 @@ app.delete('/api/v1/states/:id', (req, res) => {
 
 // READ ALL RESORTS
 app.get('/api/v1/resorts', (req, res) => {
+  const stateName = req.query.state_name;
+
+  if (stateName) {
+    db('resorts').where('state_name', stateName.toLowerCase()).select()
+      .then((resorts) => {
+        return res.status(200).json(resorts);
+      });
+    return;
+  }
+
   db('resorts').select()
     .then((resorts) => {
       res.status(200).json(resorts);
