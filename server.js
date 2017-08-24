@@ -14,7 +14,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 
-// GET REQUESTS
+// /////////////////////////////////////////////////////////////////
+// STATE ROUTES  ///////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////
+
+// READ ALL STATES
 app.get('/api/v1/states', (req, res) => {
   db('states').select()
     .then((states) => {
@@ -25,6 +29,43 @@ app.get('/api/v1/states', (req, res) => {
     });
 });
 
+// READ SPECIFIC STATE
+app.get('/api/v1/states/:stateAbbreviation', (req, res) => {
+  const { stateAbbreviation } = req.params;
+
+  db('states').where('state_abbreviation', stateAbbreviation.toUpperCase()).select()
+    .then((state) => {
+      if (!state.length) {
+        return res.status(404).json({
+          error: `Could not find a state with a state abbreviation of ${stateAbbreviation}`,
+        });
+      }
+      return res.status(200).json(state);
+    })
+    .catch((error) => {
+      res.status(500).json({ error });
+    });
+});
+
+// READ ALL RESORTS IN A SPECIFIC STATE
+app.get('/api/v1/states/:id/resorts', (req, res) => {
+  const { id } = req.params;
+
+  db('resorts').where({ states_id: id }).select()
+    .then((resort) => {
+      if (!resort.length) {
+        return res.status(404).json({
+          error: 'Could not find any resorts in this state.',
+        });
+      }
+      return res.status(200).json(resort);
+    })
+    .catch((error) => {
+      res.status(500).json({ error });
+    });
+});
+
+// CREATE NEW STATE
 app.post('/api/v1/states', (req, res) => {
   const newState = req.body;
   const requiredParameter = ['state_name', 'state_abbreviation'];
@@ -56,6 +97,7 @@ app.post('/api/v1/states', (req, res) => {
     });
 });
 
+// UPDATE STATE
 app.patch('/api/v1/states/:id', (req, res) => {
   const { id } = req.params;
   const patch = req.body;
@@ -83,6 +125,7 @@ app.patch('/api/v1/states/:id', (req, res) => {
   return null;
 });
 
+// DELETE STATE
 app.delete('/api/v1/states/:id', (req, res) => {
   const { id } = req.params;
   db('states').where({ id }).del()
@@ -94,40 +137,11 @@ app.delete('/api/v1/states/:id', (req, res) => {
     });
 });
 
-app.get('/api/v1/states/:stateAbbreviation', (req, res) => {
-  const { stateAbbreviation } = req.params;
+// /////////////////////////////////////////////////////////////////
+// RESORT ROUTES  //////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////
 
-  db('states').where('state_abbreviation', stateAbbreviation.toUpperCase()).select()
-    .then((state) => {
-      if (!state.length) {
-        return res.status(404).json({
-          error: `Could not find a state with a state abbreviation of ${stateAbbreviation}`,
-        });
-      }
-      return res.status(200).json(state);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
-});
-
-app.get('/api/v1/states/:id/resorts', (req, res) => {
-  const { id } = req.params;
-
-  db('resorts').where({ states_id: id }).select()
-    .then((resort) => {
-      if (!resort.length) {
-        return res.status(404).json({
-          error: 'Could not find any resorts in this state.',
-        });
-      }
-      return res.status(200).json(resort);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
-});
-
+// READ ALL RESORTS
 app.get('/api/v1/resorts', (req, res) => {
   db('resorts').select()
     .then((resorts) => {
@@ -138,6 +152,7 @@ app.get('/api/v1/resorts', (req, res) => {
     });
 });
 
+// READ SPECIFIC RESORT
 app.get('/api/v1/resorts/:id', (req, res) => {
   const { id } = req.params;
 
@@ -155,6 +170,92 @@ app.get('/api/v1/resorts/:id', (req, res) => {
     });
 });
 
+// READ ALL TRAILS IN A SPECIFIC RESORT
+app.get('/api/v1/resorts/:id/trails', (req, res) => {
+  const { id } = req.params;
+
+  db('trails').where({ resort_id: id }).select()
+    .then((trail) => {
+      if (!trail.length) {
+        return res.status(404).json({
+          error: `There is no resort with an id of ${id}.`,
+        });
+      }
+      return res.status(200).json(trail);
+    })
+    .catch((error) => {
+      res.status(500).json({ error });
+    });
+});
+
+// CREATE NEW RESORT
+app.post('/api/v1/resorts', (req, res) => {
+  const newResort = req.body;
+
+  const requiredParams = [
+    'resort_name',
+    'state_name',
+    'projected_open_date',
+    'annual_snowfall',
+    'trail_total',
+    'days_open_last_year',
+    'summit_elevation',
+    'base_elevation',
+    'beginner_trail_percent',
+    'intermediate_trail_percent',
+    'advanced_trail_percent',
+    'expert_trail_percent',
+    'states_id',
+  ];
+
+  requiredParams.forEach((param) => {
+    if (!newResort[param]) {
+      return res.status(422).json({ error: `Missing required parameter: ${param}` });
+    }
+  });
+
+  db('resorts').insert(newResort, '*')
+    .then((resort) => {
+      res.status(201).json(resort[0]);
+    })
+    .catch((err) => {
+      res.status(500).json({ err });
+    });
+});
+
+// UPDATE RESORT
+app.patch('/api/v1/resorts/:id', (req, res) => {
+  const updatedResort = req.body;
+  const { id } = req.params;
+
+  db('resorts').where('id', id).select().update(updatedResort, '*')
+    .then((resort) => {
+      res.status(201).json(resort);
+    })
+    .catch((err) => {
+      res.status(500).json({ err });
+    });
+});
+
+// DELETE RESORT
+app.delete('/api/v1/resorts/:id', (req, res) => {
+  const { id } = req.params;
+
+  db('resorts').where('id', id).del()
+    .then(() => {
+      res.status(202).json({ message: `The resort with ID #${id} has been deleted from the database` });
+    })
+    .catch(() => {
+      res.status(500).json({ error: `The resort with ID #${id} could not be found and was not deleted` });
+    });
+});
+
+
+// /////////////////////////////////////////////////////////////////
+// TRAILS ROUTES  //////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////
+
+// READ ALL TRAILS
 app.get('/api/v1/trails', (req, res) => {
   db('trails').select()
     .then((trails) => {
@@ -165,6 +266,24 @@ app.get('/api/v1/trails', (req, res) => {
     });
 });
 
+// READ A SPECIFIC TRAIL
+app.get('/api/v1/trails/:id', (req, res) => {
+  const { id } = req.params;
+  db('trails').where({ id }).select()
+    .then((trail) => {
+      if (!trail.length) {
+        return res.status(404).json({
+          error: `Could not find a trail with a trail with the id of ${id}`,
+        });
+      }
+      return res.status(200).json(trail);
+    })
+    .catch((error) => {
+      res.status(500).json({ error });
+    });
+});
+
+// CREATE NEW TRAIL
 app.post('/api/v1/trails', (req, res) => {
   const newTrail = req.body;
   const requiredParameter = ['trail_name', 'trail_difficulty', 'resort_id'];
@@ -191,23 +310,8 @@ app.post('/api/v1/trails', (req, res) => {
     });
 });
 
-app.get('/api/v1/trails/:id', (req, res) => {
-  const { id } = req.params;
-  db('trails').where({ id }).select()
-    .then((trail) => {
-      if (!trail.length) {
-        return res.status(404).json({
-          error: `Could not find a trail with a trail with the id of ${id}`,
-        });
-      }
-      return res.status(200).json(trail);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
-  });
-
-  app.patch('/api/v1/trails/:id', (req, res) => {
+// UPDATE TRAIL
+app.patch('/api/v1/trails/:id', (req, res) => {
   const { id } = req.params;
   const patch = req.body;
 
@@ -224,9 +328,10 @@ app.get('/api/v1/trails/:id', (req, res) => {
       res.status(500).json({ error });
     });
   return null;
-  });
+});
 
-  app.delete('/api/v1/trails/:id', (req, res) => {
+// DELETE TRAIL
+app.delete('/api/v1/trails/:id', (req, res) => {
   const { id } = req.params;
   db('trails').where({ id }).del()
     .then(() => {
@@ -235,84 +340,8 @@ app.get('/api/v1/trails/:id', (req, res) => {
     .catch((error) => {
       res.status(500).json({ error });
     });
-  });
-
-// POST REQUESTS
-app.post('/api/v1/resorts', (req, res) => {
-  const newResort = req.body;
-
-  const requiredParams = [
-    'resort_name',
-    'state_name',
-    'projected_open_date',
-    'annual_snowfall',
-    'trail_total',
-    'days_open_last_year',
-    'summit_elevation',
-    'base_elevation',
-    'beginner_trail_percent',
-    'intermediate_trail_percent',
-    'advanced_trail_percent',
-    'expert_trail_percent',
-    'states_id',
-  ];
-
-  for (const requiredParam of requiredParams) {
-    if (!newResort[requiredParam]) {
-      return res.status(422).json({ error: `Missing required parameter: ${requiredParam}` });
-    }
-  }
-
-  db('resorts').insert(newResort, '*')
-    .then((resort) => {
-      res.status(201).json(resort[0]);
-    })
-    .catch((err) => {
-      res.status(500).json({ err });
-    });
 });
 
-app.patch('/api/v1/resorts/:id', (req, res) => {
-  const updatedResort = req.body;
-  const { id } = req.params;
-
-  db('resorts').where('id', id).select().update(updatedResort, '*')
-    .then((resort) => {
-      res.status(201).json(resort);
-    })
-    .catch((err) => {
-      res.status(500).json({ err });
-    });
-});
-
-app.delete('/api/v1/resorts/:id', (req, res) => {
-  const { id } = req.params;
-
-  db('resorts').where('id', id).del()
-    .then(() => {
-      res.status(202).json({ message: `The resort with ID #${id} has been deleted from the database` });
-    })
-    .catch(() => {
-      res.status(500).json({ error: `The resort with ID #${id} could not be found and was not deleted` });
-    });
-});
-
-app.get('/api/v1/resorts/:id/trails', (req, res) => {
-  const { id } = req.params;
-
-  db('trails').where({ resort_id: id }).select()
-    .then((trail) => {
-      if (!trail.length) {
-        return res.status(404).json({
-          error: `There is no resort with an id of ${id}.`,
-        });
-      }
-      return res.status(200).json(trail);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
-});
 
 app.listen(app.get('port'), () => {
   console.log(`BYO-Backend is running on http://localhost:${app.get('port')}`);
