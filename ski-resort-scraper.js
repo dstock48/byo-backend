@@ -3,19 +3,16 @@ const Nightmare = require('nightmare');
 
 const nightmare = Nightmare();
 const result = [];
-
 const resortURLs = new Promise((res, rej) => {
   nightmare
     .goto('http://www.onthesnow.com/united-states/ski-resorts.html')
     .evaluate(() => {
-      const resortList = document.querySelectorAll('.resortList tr .name a');  //eslint-disable-line
-
+      const resortList = document.querySelectorAll('.resortList tr .name a');
       const resortLinks = [];
       for (let i = 0; i < 10; i += 1) {
         const link = resortList[i].href;
         resortLinks.push(link);
       }
-
       return resortLinks;
     })
     .end()

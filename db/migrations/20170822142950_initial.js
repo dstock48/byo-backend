@@ -1,15 +1,15 @@
 
-exports.up = function(knex, Promise) {
+exports.up = (knex, Promise) => {
   return Promise.all([
-    knex.schema.createTable('states', function(table) {
+    knex.schema.createTable('states', (table) => {
       table.increments('id').primary();
       table.string('state_name').unique();
       table.string('state_abbreviation').unique();
 
-      table.timestamps(true, true)
+      table.timestamps(true, true);
     }),
 
-    knex.schema.createTable('resorts', function(table) {
+    knex.schema.createTable('resorts', (table) => {
       table.increments('id').primary();
       table.string('resort_name');
       table.string('state_name');
@@ -26,10 +26,10 @@ exports.up = function(knex, Promise) {
       table.integer('states_id').unsigned();
       table.foreign('states_id').references('states.id');
 
-      table.timestamps(true, true)
+      table.timestamps(true, true);
     }),
 
-    knex.schema.createTable('trails', function(table) {
+    knex.schema.createTable('trails', (table) => {
       table.increments('id').primary();
       table.string('trail_name');
       table.string('trail_difficulty');
@@ -38,15 +38,15 @@ exports.up = function(knex, Promise) {
       table.integer('resort_id').unsigned();
       table.foreign('resort_id').references('resorts.id');
 
-      table.timestamps(true, true)
-    })
+      table.timestamps(true, true);
+    }),
   ]);
 };
 
-exports.down = function(knex, Promise) {
+exports.down = (knex, Promise) => {
   return Promise.all([
     knex.schema.dropTable('trails'),
     knex.schema.dropTable('resorts'),
-    knex.schema.dropTable('states')
+    knex.schema.dropTable('states'),
   ]);
 };
