@@ -298,19 +298,21 @@ app.delete('/api/v1/resorts/:id', (req, res) => {
 });
 
 app.get('/api/v1/resorts/:id/trails', (req, res) => {
-const { id } = req.params;
+  const { id } = req.params;
 
-db('trails').where({ resort_id: id }).select()
-  .then((trail) => {
-    if (!trail.length) {
-      return res.status(404).json({
-        error: `There is no resort with an id of ${id}.`,
-      });
-    }
-    return res.status(200).json(trail);
-  })
-  .catch((error) => {
-    res.status(500).json({ error });
+  db('trails').where({ resort_id: id }).select()
+    .then((trail) => {
+      if (!trail.length) {
+        return res.status(404).json({
+          error: `There is no resort with an id of ${id}.`,
+        });
+      }
+      return res.status(200).json(trail);
+    })
+    .catch((error) => {
+      res.status(500).json({ error });
+    });
+});
 
 app.listen(app.get('port'), () => {
   console.log(`BYO-Backend is running on http://localhost:${app.get('port')}`);
