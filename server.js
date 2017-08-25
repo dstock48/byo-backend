@@ -120,12 +120,8 @@ app.patch('/api/v1/states/:id', (req, res) => {
   updatedState.state_abbreviation = updatedState.state_abbreviation.toUpperCase();
   updatedState.state_name = capitalizeState(updatedState.state_name);
   db('states').where({ id }).update(updatedState)
-    .then(() => {
-      res.status(201).json(updatedState);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .then(() => res.status(200).json(updatedState))
+    .catch(error => res.status(500).json({ error }));
   return null;
 });
 

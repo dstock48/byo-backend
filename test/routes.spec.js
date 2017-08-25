@@ -226,6 +226,42 @@ describe('API routes', () => {
         });
     });
 
+    it('SAD PATH - Should return a 500 status with an error message if a state name  already exists', (done) => {
+      chai.request(server)
+        .post('/api/v1/states')
+        .send({
+          state_name: 'colorado',
+          state_abbreviation: 'cl',
+        })
+        .end((err, res) => {
+          res.should.have.status(500);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.be.a('object');
+          res.body.should.have.property('error');
+          res.body.error.should.have.property('constraint');
+          res.body.error.constraint.should.equal('states_state_name_unique');
+          done();
+        });
+    });
+
+    it('SAD PATH - Should return a 500 status with an error message if a state abbreviation already exists', (done) => {
+      chai.request(server)
+        .post('/api/v1/states')
+        .send({
+          state_name: 'crazyville',
+          state_abbreviation: 'co',
+        })
+        .end((err, res) => {
+          res.should.have.status(500);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.be.a('object');
+          res.body.should.have.property('error');
+          res.body.error.should.have.property('constraint');
+          res.body.error.constraint.should.equal('states_state_abbreviation_unique');
+          done();
+        });
+    });
+
     it('SAD PATH - Should return a 422 status with an error message if a required parameter is missing', (done) => {
       chai.request(server)
         .post('/api/v1/states')
@@ -278,18 +314,18 @@ describe('API routes', () => {
     });
   });
 
-  describe('PATCH /ap1/v1/states:id', () => {
+  describe('PATCH /api/v1/states/:id', () => {
     it('Should update one record', (done) => {
       chai.request(server)
-        .patch('/ap1/v1/states/3')
+        .patch('/api/v1/states/3')
         .send({
-          state_name: 'Joeville',
+          state_abbreviation: 'dd',
         })
         .end((err, res) => {
-          res.should.have.status(201);
+          res.should.have.status(200);
           res.should.be.json; //eslint-disable-line
-          res.body.should.have.property('state_name');
-          res.body.state_name.should.equal('Joeville');
+          res.body.should.have.property('state_abbreviation');
+          res.body.state_abbreviation.should.equal('DD');
           res.body.should.not.have.property('state_abbreviation');
           res.headers.should.have.property('content-type');
           res.headers['content-type'].should.equal('application/json; charset=utf-8');
