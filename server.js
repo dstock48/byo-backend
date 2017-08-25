@@ -130,7 +130,7 @@ app.delete('/api/v1/states/:id', (req, res) => {
       if (!state.length) {
         res.status(404).json({ error: `The state with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(204).json({
+      res.status(200).json({
         success: `The state with ID# ${id} has been successfully deleted!`,
         deletedStateInfo: state[0],
       });
@@ -267,7 +267,7 @@ app.delete('/api/v1/resorts/:id', (req, res) => {
       if (!resort.length) {
         return res.status(404).json({ error: `The resort with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(202).json({
+      res.status(200).json({
         success: `The resort with ID# ${id} has been deleted from the database`,
         deletedResortInfo: resort[0],
       });
@@ -366,7 +366,7 @@ app.delete('/api/v1/trails/:id', (req, res) => {
       if (!trail.length) {
         res.status(404).json({ error: `The trail with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(202).json({
+      res.status(200).json({
         success: `The trail with ID# ${id} has been deleted from the database`,
         deletedTrailInfo: trail[0],
       });
