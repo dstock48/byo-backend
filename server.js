@@ -81,9 +81,12 @@ app.post('/api/v1/states', (req, res) => {
     return null;
   });
 
+  const capitalizeState = (state) => {
+    return state.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
   newState.state_abbreviation = newState.state_abbreviation.toUpperCase();
-  newState.state_name = newState.state_name.charAt(0).toUpperCase() +
-  newState.state_name.slice(1).toLowerCase();
+  newState.state_name = capitalizeState(newState.state_name);
 
   db('states').insert(newState, 'id')
     .then(() => {
@@ -99,26 +102,31 @@ app.patch('/api/v1/states/:id', (req, res) => {
   const { id } = req.params;
   const updatedState = req.body;
 
-  if (updatedState.state_abbreviation.length !== 2) {
-    return res.status(422).json({
-      error: 'State abbreviations must be exactly 2 characters.',
-    });
+  if (updatedState.state_abbreviation) {
+    updatedState.state_abbreviation = updatedState.state_abbreviation.toUpperCase();
+    if (updatedState.state_abbreviation.length !== 2) {
+      return res.status(422).json({
+        error: 'State abbreviations must be exactly 2 characters.',
+      });
+    }
   }
+
   if (updatedState.id) {
     return res.status(422).json({
       error: 'You cannot change the ID.',
     });
   }
-  updatedState.state_abbreviation = updatedState.state_abbreviation.toUpperCase();
-  updatedState.state_name = updatedState.state_name.charAt(0).toUpperCase() +
-  updatedState.state_name.slice(1).toLowerCase();
+
+  if (updatedState.state_name) {
+    const capitalizeState = (state) => {
+      return state.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    };
+    updatedState.state_name = capitalizeState(updatedState.state_name);
+  }
+
   db('states').where({ id }).update(updatedState)
-    .then(() => {
-      res.status(201).json(updatedState);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .then(() => res.status(200).json(updatedState))
+    .catch(error => res.status(500).json({ error }));
   return null;
 });
 
@@ -130,7 +138,7 @@ app.delete('/api/v1/states/:id', (req, res) => {
       if (!state.length) {
         res.status(404).json({ error: `The state with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(204).json({
+      res.status(200).json({
         success: `The state with ID# ${id} has been successfully deleted!`,
         deletedStateInfo: state[0],
       });
@@ -146,6 +154,16 @@ app.delete('/api/v1/states/:id', (req, res) => {
 
 // READ ALL RESORTS
 app.get('/api/v1/resorts', (req, res) => {
+  const stateName = req.query.state_name;
+
+  if (stateName) {
+    db('resorts').where('state_name', stateName.toLowerCase()).select()
+      .then((resorts) => {
+        return res.status(200).json(resorts);
+      });
+    return;
+  }
+
   db('resorts').select()
     .then((resorts) => {
       res.status(200).json(resorts);
@@ -163,7 +181,7 @@ app.get('/api/v1/resorts/:id', (req, res) => {
     .then((resort) => {
       if (!resort.length) {
         return res.status(404).json({
-          error: `Could not find a resort with a resort with the id of ${id}`,
+          error: `Could not find a resort with the id of ${id}`,
         });
       }
       return res.status(200).json(resort);
@@ -215,6 +233,7 @@ app.post('/api/v1/resorts', (req, res) => {
     if (!newResort[param]) {
       return res.status(422).json({ error: `Missing required parameter: ${param}` });
     }
+    return null;
   });
 
   db('resorts').insert(newResort, '*')
@@ -244,6 +263,7 @@ app.patch('/api/v1/resorts/:id', (req, res) => {
     .catch((err) => {
       res.status(500).json({ err });
     });
+  return null;
 });
 
 // DELETE RESORT
@@ -255,10 +275,11 @@ app.delete('/api/v1/resorts/:id', (req, res) => {
       if (!resort.length) {
         return res.status(404).json({ error: `The resort with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(202).json({
+      res.status(200).json({
         success: `The resort with ID# ${id} has been deleted from the database`,
         deletedResortInfo: resort[0],
       });
+      return null;
     })
     .catch((err) => {
       res.status(500).json({ err });
@@ -353,7 +374,7 @@ app.delete('/api/v1/trails/:id', (req, res) => {
       if (!trail.length) {
         res.status(404).json({ error: `The trail with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(202).json({
+      res.status(200).json({
         success: `The trail with ID# ${id} has been deleted from the database`,
         deletedTrailInfo: trail[0],
       });
