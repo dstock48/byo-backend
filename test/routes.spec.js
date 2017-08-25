@@ -163,4 +163,62 @@ describe('API routes', () => {
         });
     });
   });
+  describe('POST /api/v1/resorts', () => {
+    it('should add a new resort to the resorts table in the database', (done) => {
+      const newResort = {
+        resort_name: 'New Resort',
+        state_name: 'colorado',
+        projected_open_date: '1/1/18',
+        annual_snowfall: '200',
+        trail_total: '50',
+        days_open_last_year: '0',
+        summit_elevation: '13500',
+        base_elevation: '10000',
+        beginner_trail_percent: '0.2',
+        intermediate_trail_percent: '0.2',
+        advanced_trail_percent: '0.3',
+        expert_trail_percent: '0.3',
+        states_id: '6',
+      };
+
+      chai.request(server)
+        .post('/api/v1/resorts')
+        .send(newResort)
+        .end((err, res) => {
+          res.should.have.status(201);
+
+          chai.request(server)
+            .get('/api/v1/resorts')
+            .end((error, resp) => {
+              resp.body.should.have.length(333);
+              done();
+            });
+        });
+    });
+    it('should return an error when not provide all required parameters', (done) => {
+      const newResort = {
+        resort_name: 'New Resort',
+        state_name: 'colorado',
+        annual_snowfall: '200',
+        trail_total: '50',
+        days_open_last_year: '0',
+        summit_elevation: '13500',
+        base_elevation: '10000',
+        beginner_trail_percent: '0.2',
+        intermediate_trail_percent: '0.2',
+        advanced_trail_percent: '0.3',
+        expert_trail_percent: '0.3',
+        states_id: '6',
+      };
+
+      chai.request(server)
+        .post('/api/v1/resorts')
+        .send(newResort)
+        .end((err, res) => {
+          res.body.should.eql({ error: 'Missing required parameter: projected_open_date' });
+
+          done();
+        });
+    });
+  });
 });
