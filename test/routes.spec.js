@@ -196,7 +196,7 @@ describe('API routes', () => {
         });
     });
     it('should return an error when not provide all required parameters', (done) => {
-      const newResort = {
+      const newResortMissingParam = {
         resort_name: 'New Resort',
         state_name: 'colorado',
         annual_snowfall: '200',
@@ -213,11 +213,63 @@ describe('API routes', () => {
 
       chai.request(server)
         .post('/api/v1/resorts')
-        .send(newResort)
+        .send(newResortMissingParam)
         .end((err, res) => {
           res.body.should.eql({ error: 'Missing required parameter: projected_open_date' });
 
           done();
+        });
+    });
+  });
+
+  describe('DELETE /api/v1/resorts/:id', () => {
+    it.only('should delete a specific record from the resorts table of the database', (done) => {
+      const newResort = {
+        resort_name: 'New Resort',
+        state_name: 'colorado',
+        projected_open_date: '1/1/18',
+        annual_snowfall: '200',
+        trail_total: '50',
+        days_open_last_year: '0',
+        summit_elevation: '13500',
+        base_elevation: '10000',
+        beginner_trail_percent: '0.2',
+        intermediate_trail_percent: '0.2',
+        advanced_trail_percent: '0.3',
+        expert_trail_percent: '0.3',
+        states_id: '6',
+      };
+
+      chai.request(server)
+        .get('/api/v1/resorts')
+        .end((err, res) => {
+          res.body.length.should.eql(332);
+
+          chai.request(server)
+            .post('/api/v1/resorts')
+            .send(newResort)
+            .end((err1, res1) => {
+              res1.should.have.status(201);
+
+              chai.request(server)
+                .get('/api/v1/resorts')
+                .end((err2, res2) => {
+                  res2.body.should.have.length(333);
+
+                  chai.request(server)
+                    .delete('/api/v1/resorts/333')
+                    .end((err3, res3) => {
+                      res3.body.success.should.eql('The resort with ID# 333 has been deleted from the database');
+
+                      chai.request(server)
+                        .get('/api/v1/resorts')
+                        .end((err4, res4) => {
+                          res4.body.should.have.length(332);
+                          done();
+                        });
+                    });
+                });
+            });
         });
     });
   });
