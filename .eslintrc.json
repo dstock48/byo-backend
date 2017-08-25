@@ -12,6 +12,10 @@
     "node": true
   },
   "globals": {
-    "document": false
+    "document": false,
+    "describe": false,
+    "it": false,
+    "beforeEach": false,
+    "should": false
   }
 }
