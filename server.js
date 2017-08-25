@@ -173,7 +173,7 @@ app.get('/api/v1/resorts/:id', (req, res) => {
     .then((resort) => {
       if (!resort.length) {
         return res.status(404).json({
-          error: `Could not find a resort with a resort with the id of ${id}`,
+          error: `Could not find a resort with the id of ${id}`,
         });
       }
       return res.status(200).json(resort);
