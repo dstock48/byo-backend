@@ -81,9 +81,12 @@ app.post('/api/v1/states', (req, res) => {
     return null;
   });
 
+  const capitalizeState = (state) => {
+    return state.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
   newState.state_abbreviation = newState.state_abbreviation.toUpperCase();
-  newState.state_name = newState.state_name.charAt(0).toUpperCase() +
-  newState.state_name.slice(1).toLowerCase();
+  newState.state_name = capitalizeState(newState.state_name);
 
   db('states').insert(newState, 'id')
     .then(() => {
@@ -109,9 +112,13 @@ app.patch('/api/v1/states/:id', (req, res) => {
       error: 'You cannot change the ID.',
     });
   }
+
+  const capitalizeState = (state) => {
+    return state.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
   updatedState.state_abbreviation = updatedState.state_abbreviation.toUpperCase();
-  updatedState.state_name = updatedState.state_name.charAt(0).toUpperCase() +
-  updatedState.state_name.slice(1).toLowerCase();
+  updatedState.state_name = capitalizeState(updatedState.state_name);
   db('states').where({ id }).update(updatedState)
     .then(() => {
       res.status(201).json(updatedState);
