@@ -47,20 +47,22 @@ describe('API routes', () => {
           res.should.be.json;
           res.body.should.be.a('array');
           res.body.should.have.length(332);
-          res.body[0].should.have.property('resort_name');
-          res.body[0].should.have.property('state_name');
-          res.body[0].should.have.property('projected_open_date');
-          res.body[0].should.have.property('annual_snowfall');
-          res.body[0].should.have.property('trail_total');
-          res.body[0].should.have.property('days_open_last_year');
-          res.body[0].should.have.property('summit_elevation');
-          res.body[0].should.have.property('base_elevation');
-          res.body[0].should.have.property('beginner_trail_percent');
-          res.body[0].should.have.property('intermediate_trail_percent');
-          res.body[0].should.have.property('advanced_trail_percent');
-          res.body[0].should.have.property('expert_trail_percent');
-          res.body[0].should.have.property('states_id');
-          res.body[0].should.have.property('created_at');
+          res.body.forEach((item) => {
+            item.should.have.property('resort_name');
+            item.should.have.property('state_name');
+            item.should.have.property('projected_open_date');
+            item.should.have.property('annual_snowfall');
+            item.should.have.property('trail_total');
+            item.should.have.property('days_open_last_year');
+            item.should.have.property('summit_elevation');
+            item.should.have.property('base_elevation');
+            item.should.have.property('beginner_trail_percent');
+            item.should.have.property('intermediate_trail_percent');
+            item.should.have.property('advanced_trail_percent');
+            item.should.have.property('expert_trail_percent');
+            item.should.have.property('states_id');
+            item.should.have.property('created_at');
+          });
           done();
         });
     });
@@ -72,14 +74,18 @@ describe('API routes', () => {
           res.should.be.json;
           res.body.should.be.a('array');
           res.body.should.have.length(15);
-          res.body[0].state_name.should.eql('vermont');
+          res.body.forEach((item) => {
+            item.state_name.should.eql('vermont');
+          });
         });
       chai.request(server)
         .get('/api/v1/resorts?state_name=montana')
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.length(12);
-          res.body[0].state_name.should.eql('montana');
+          res.body.forEach((item) => {
+            item.state_name.should.eql('montana');
+          });
           done();
         });
     });
@@ -128,18 +134,21 @@ describe('API routes', () => {
           res.should.have.status(200);
           res.should.be.json;
           res.body.should.have.length(3);
-          res.body[1].should.have.property('trail_name');
+          res.body.forEach((item) => {
+            item.should.have.property('trail_name');
+            item.should.have.property('trail_difficulty');
+            item.should.have.property('trail_length');
+            item.should.have.property('open');
+            item.should.have.property('resort_id');
+            item.should.have.property('created_at');
+            item.should.have.property('updated_at');
+            item.should.have.property('resort_name');
+          });
           res.body[1].trail_name.should.eql('Basically Flat');
-          res.body[1].should.have.property('trail_difficulty');
           res.body[1].trail_difficulty.should.eql('Beginner');
-          res.body[1].should.have.property('trail_length');
           res.body[1].trail_length.should.eql('1.35');
-          res.body[1].should.have.property('open');
           res.body[1].open.should.eql(true);
-          res.body[1].should.have.property('resort_id');
           res.body[1].resort_id.should.eql(171);
-          res.body[1].should.have.property('created_at');
-          res.body[1].should.have.property('resort_name');
           res.body[1].resort_name.should.eql('Mount Snow');
           done();
         });
