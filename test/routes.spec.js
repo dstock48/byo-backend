@@ -529,7 +529,7 @@ describe('API routes', () => {
   });
 
   describe('DELETE /api/v1/resorts/:id', () => {
-    it.only('should delete a specific record from the resorts table of the database', (done) => {
+    it('should delete a specific record from the resorts table of the database', (done) => {
       const newResort = {
         resort_name: 'New Resort',
         state_name: 'colorado',
