@@ -1,0 +1,111 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: sans-serif;
+  background-color: rgba(27,189,222, 0.9);
+  background-image: url(chairlift.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-blend-mode: luminosity;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  height: 40px;
+  width: 250px;
+  font-size: 18px;
+  padding: 5px;
+  margin-bottom: 20px;
+  border: 4px solid;
+  outline: none;
+  transition: 200ms;
+}
+input:focus {
+  border-color: #0db5dc;
+}
+
+label {
+  margin-bottom: 3px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+#page-title {
+  padding: 10px;
+  background-color: #000;
+  color: #fff;
+}
+
+#form-heading {
+  margin: 20px auto;
+  padding: 10px;
+  width: 200px;
+  background-color: #000;
+  color: #fff;
+}
+
+#token-heading {
+  margin: 20px auto;
+  padding: 10px;
+  width: 90px;
+  background-color: #000;
+  color: #fff;
+}
+
+button {
+  margin: 0 auto;
+  padding: 5px;
+  border: 4px solid #000;
+  width: 120px;
+  background-color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 200ms;
+  outline: none;
+  border-radius: 100px;
+}
+button:hover {
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
+}
+button:active {
+  transform: translateY(3px);
+}
+
+#token-display {
+  margin: 20px auto;
+  padding: 10px;
+  width: 550px;
+  background-color: #000;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+
+.hidden {
+  display: none;
+}

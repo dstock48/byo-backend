@@ -4,9 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>BYO-Backend</title>
+  <link rel="stylesheet" href="/styles.css">
+  <title>Winter Resort API</title>
 </head>
 <body>
-  <h1>BYO-Backend</h1>
+  <h1 id="page-title">Winter Resort API</h1>
+  <form>
+    <h2 id="form-heading">Request Token</h2>
+    <label class="email-label" for="email">Email Address</label>
+    <input class="email-input" type="email" id="email" required>
+    <label class="app-name-label" for="app-name">Application Name</label>
+    <input class="app-name-input" type="text" id="app-name" required>
+    <button id="submit-btn">REQUEST</button>
+  </form>
+  <div id="token-container" class="hidden">
+    <h3 id="token-heading">Token:</h3>
+    <p id="token-display"></p>
+  </div>
+  <script src="main.js" charset="utf-8"></script>
 </body>
 </html>
