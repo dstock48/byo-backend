@@ -357,6 +357,132 @@ describe('API routes', () => {
           done();
         });
     });
+
+    it('Should update multiple records', (done) => {
+      chai.request(server)
+        .patch('/api/v1/states/3')
+        .set('authorization', adminToken)
+        .send({
+          state_abbreviation: 'bn',
+          state_name: 'Joelandiaville',
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.have.property('state_abbreviation');
+          res.body.state_abbreviation.should.equal('BN');
+          res.body.should.have.property('state_name');
+          res.body.state_name.should.equal('Joelandiaville');
+          res.headers.should.have.property('content-type');
+          res.headers['content-type'].should.equal('application/json; charset=utf-8');
+          done();
+        });
+    });
+
+    it('SAD PATH - Should not allow you to update an ID', (done) => {
+      chai.request(server)
+        .patch('/api/v1/states/3')
+        .set('authorization', adminToken)
+        .send({
+          state_abbreviation: 'bn',
+          state_name: 'Joelandiaville',
+          id: 5467,
+        })
+        .end((err, res) => {
+          res.should.have.status(422);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.have.property('error');
+          res.body.error.should.equal('You cannot change the ID.');
+          done();
+        });
+    });
+
+    it('SAD PATH - Should return an error if the state does not exist', (done) => {
+      chai.request(server)
+        .patch('/api/v1/states/56')
+        .set('authorization', adminToken)
+        .send({
+          state_abbreviation: 'bn',
+          state_name: 'Joelandiaville',
+        })
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.have.property('error');
+          res.body.error.should.equal('The state with ID# 56 was not found and could not be updated');
+          done();
+        });
+    });
+  });
+
+  describe('DELETE /api/v1/states/:id', () => {
+    it.only('should delete a specific record from the states table of the database', (done) => {
+      const newState = {
+        state_name: 'Joeville',
+        state_abbreviation: 'jv',
+      };
+
+      chai.request(server)
+        .get('/api/v1/states')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          res.body.length.should.eql(50);
+
+          chai.request(server)
+            .post('/api/v1/states')
+            .set('authorization', adminToken)
+            .send(newState)
+            .end((err1, res1) => {
+              res1.should.have.status(201);
+
+              chai.request(server)
+                .get('/api/v1/states')
+                .set('authorization', userToken)
+                .end((err2, res2) => {
+                  res2.body.should.have.length(51);
+
+                  chai.request(server)
+                    .delete('/api/v1/states/51')
+                    .set('authorization', adminToken)
+                    .end((err3, res3) => {
+                      res3.body.success.should.eql('The state with ID# 51 has been successfully deleted!');
+
+                      chai.request(server)
+                        .get('/api/v1/states')
+                        .set('authorization', userToken)
+                        .end((err4, res4) => {
+                          res4.body.should.have.length(50);
+                          done();
+                        });
+                    });
+                });
+            });
+        });
+    });
+
+    it.only('SAD PATH - should return an error when trying to delete a record that does not exist', (done) => {
+      chai.request(server)
+        .delete('/api/v1/states/327')
+        .set('authorization', adminToken)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.eql({ error: 'The state with ID# 327 was not found and could not be deleted' });
+          done();
+        });
+    });
+
+    it.only('SAD PATH - should return an error if the state has a resort linked to it', (done) => {
+      chai.request(server)
+        .delete('/api/v1/states/6')
+        .set('authorization', adminToken)
+        .end((err, res) => {
+          res.should.have.status(500);
+          res.body.should.have.property('error');
+          res.body.error.should.have.property('detail');
+          res.body.error.detail.should.equal('Key (id)=(6) is still referenced from table "resorts".');
+          done();
+        });
+    });
   });
 
   describe('GET api/v1/resorts', () => {
@@ -499,6 +625,7 @@ describe('API routes', () => {
         });
     });
   });
+
   describe('POST /api/v1/resorts', () => {
     it('should add a new resort to the resorts table in the database', (done) => {
       const newResort = {
@@ -624,6 +751,7 @@ describe('API routes', () => {
             });
         });
     });
+
     it('should return an error when trying to delete a record that does not exist', (done) => {
       chai.request(server)
         .delete('/api/v1/resorts/999')
@@ -635,6 +763,7 @@ describe('API routes', () => {
         });
     });
   });
+
   describe('PATCH /api/v1/resorts/:id', () => {
     it('should update a resort record with the supplied information', (done) => {
       chai.request(server)

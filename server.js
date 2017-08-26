@@ -181,8 +181,13 @@ app.patch('/api/v1/states/:id', checkAdmin, formatEntryCapitalization, checkStat
 
   if (updatedState.token) delete updatedState.token;
 
-  db('states').where({ id }).update(updatedState)
-    .then(() => res.status(200).json(updatedState))
+  db('states').where({ id }).update(updatedState, '*')
+    .then((state) => {
+      if (!state.length) {
+        return res.status(404).json({ error: `The state with ID# ${id} was not found and could not be updated` });
+      }
+      return res.status(201).json(state);
+    })
     .catch(error => res.status(500).json({ error }));
   return null;
 });
