@@ -77,6 +77,17 @@ describe('API routes', () => {
         });
     });
 
+    it('SAD PATH - Should return a 403 error if the user does not pass a JWT', (done) => {
+      chai.request(server)
+        .get('/api/v1/state')
+        .end((err, res) => {
+          err.should.have.status(403);
+          res.should.have.property('error');
+          res.error.text.should.include('You must be authorized to hit this endpoint');
+          done();
+        });
+    });
+
     it('SAD PATH - Should return a 404 if the get is improperly called', (done) => {
       chai.request(server)
         .get('/api/v1/state')
@@ -800,6 +811,59 @@ describe('API routes', () => {
         .send({ resort_name: 'Updated Resort Name' })
         .end((err, res) => {
           res.body.should.eql({ error: 'The resort with ID# 9999 was not found and could not be updated' });
+          done();
+        });
+    });
+  });
+
+  describe('GET /api/v1/trails', () => {
+    it('Should return an array of trails', (done) => {
+      chai.request(server)
+        .get('/api/v1/trails')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.be.a('array');
+          res.body.length.should.equal(6);
+          res.body.forEach((state) => {
+            state.should.have.property('id');
+            state.id.should.not.be.NaN; //eslint-disable-line
+            state.should.have.property('trail_name');
+            state.should.have.property('trail_difficulty');
+            state.should.have.property('trail_length');
+            state.should.have.property('open');
+            state.should.have.property('resort_id');
+            state.should.have.property('resort_name');
+            state.should.have.property('created_at');
+            state.should.have.property('updated_at');
+          });
+          res.body[0].id.should.equal(1);
+          res.body[0].trail_name.should.equal('Super Duper Trooper Trail');
+          res.body[0].trail_difficulty.should.equal('Advanced');
+          res.body[0].trail_length.should.equal('3.50');
+          res.body[0].open.should.equal(true);
+          res.body[0].resort_id.should.equal(304);
+          res.body[0].resort_name.should.equal('Vail');
+          res.body[4].id.should.equal(5);
+          res.body[4].trail_name.should.equal('You Will DIE!');
+          res.body[4].trail_difficulty.should.equal('Expert');
+          res.body[4].trail_length.should.equal('7.85');
+          res.body[4].open.should.equal(false);
+          res.body[4].resort_id.should.equal(28);
+          res.body[4].resort_name.should.equal('Big Sky Resort');
+          done();
+        });
+    });
+
+    it('SAD PATH - Should return a 404 if the get is improperly called', (done) => {
+      chai.request(server)
+        .get('/api/v1/trail')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          err.should.have.status(404);
+          res.should.have.property('error');
+          res.error.text.should.include('Cannot GET /api/v1/trail');
           done();
         });
     });
