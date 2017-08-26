@@ -111,12 +111,8 @@ app.post('/api/v1/auth', (req, res) => {
 // READ ALL STATES
 app.get('/api/v1/states', (req, res) => {
   db('states').select()
-    .then((states) => {
-      res.status(200).json(states);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .then(states => res.status(200).json(states))
+    .catch(error => res.status(500).json({ error }));
 });
 
 // READ SPECIFIC STATE
@@ -132,9 +128,7 @@ app.get('/api/v1/states/:stateAbbreviation', (req, res) => {
       }
       return res.status(200).json(state);
     })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .catch(error => res.status(500).json({ error }));
 });
 
 // READ ALL RESORTS IN A SPECIFIC STATE
@@ -150,9 +144,7 @@ app.get('/api/v1/states/:id/resorts', (req, res) => {
       }
       return res.status(200).json(resort);
     })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .catch(error => res.status(500).json({ error }));
 });
 
 // CREATE NEW STATE
@@ -172,12 +164,8 @@ app.post('/api/v1/states', checkAdmin, formatEntryCapitalization, checkStateAbbr
   if (newState.token) delete newState.token;
 
   db('states').insert(newState, 'id')
-    .then(() => {
-      res.status(201).json(newState);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .then(() => res.status(201).json(newState))
+    .catch(error => res.status(500).json({ error }));
 });
 
 // UPDATE STATE
@@ -205,16 +193,14 @@ app.delete('/api/v1/states/:id', checkAdmin, (req, res) => {
   db('states').where({ id }).del().returning('*')
     .then((state) => {
       if (!state.length) {
-        res.status(404).json({ error: `The state with ID# ${id} was not found and could not be deleted` });
+        return res.status(404).json({ error: `The state with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(200).json({
+      return res.status(200).json({
         success: `The state with ID# ${id} has been successfully deleted!`,
         deletedStateInfo: state[0],
       });
     })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .catch(error => res.status(500).json({ error }));
 });
 
 // /////////////////////////////////////////////////////////////////
@@ -227,19 +213,13 @@ app.get('/api/v1/resorts', (req, res) => {
 
   if (stateName) {
     db('resorts').where('state_name', stateName.toLowerCase()).select()
-      .then((resorts) => {
-        return res.status(200).json(resorts);
-      });
+      .then(resorts => res.status(200).json(resorts));
     return;
   }
 
   db('resorts').select()
-    .then((resorts) => {
-      res.status(200).json(resorts);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .then(resorts => res.status(200).json(resorts))
+    .catch(error => res.status(500).json({ error }));
 });
 
 // READ SPECIFIC RESORT
@@ -255,9 +235,7 @@ app.get('/api/v1/resorts/:id', (req, res) => {
       }
       return res.status(200).json(resort);
     })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .catch(error => res.status(500).json({ error }));
 });
 
 // READ ALL TRAILS IN A SPECIFIC RESORT
@@ -273,9 +251,7 @@ app.get('/api/v1/resorts/:id/trails', (req, res) => {
       }
       return res.status(200).json(trail);
     })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .catch(error => res.status(500).json({ error }));
 });
 
 // CREATE NEW RESORT
@@ -308,12 +284,8 @@ app.post('/api/v1/resorts', checkAdmin, (req, res) => {
   if (newResort.token) delete newResort.token;
 
   db('resorts').insert(newResort, '*')
-    .then((resort) => {
-      res.status(201).json(resort[0]);
-    })
-    .catch((err) => {
-      res.status(500).json({ err });
-    });
+    .then(resort => res.status(201).json(resort[0]))
+    .catch(err => res.status(500).json({ err }));
 });
 
 // UPDATE RESORT
@@ -336,9 +308,7 @@ app.patch('/api/v1/resorts/:id', checkAdmin, (req, res) => {
       }
       return res.status(201).json(resort);
     })
-    .catch((err) => {
-      res.status(500).json({ err });
-    });
+    .catch(err => res.status(500).json({ err }));
   return null;
 });
 
@@ -351,15 +321,12 @@ app.delete('/api/v1/resorts/:id', checkAdmin, (req, res) => {
       if (!resort.length) {
         return res.status(404).json({ error: `The resort with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(200).json({
+      return res.status(200).json({
         success: `The resort with ID# ${id} has been deleted from the database`,
         deletedResortInfo: resort[0],
       });
-      return null;
     })
-    .catch((err) => {
-      res.status(500).json({ err });
-    });
+    .catch(err => res.status(500).json({ err }));
 });
 
 
@@ -370,12 +337,8 @@ app.delete('/api/v1/resorts/:id', checkAdmin, (req, res) => {
 // READ ALL TRAILS
 app.get('/api/v1/trails', (req, res) => {
   db('trails').select()
-    .then((trails) => {
-      res.status(200).json(trails);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .then(trails => res.status(200).json(trails))
+    .catch(error => res.status(500).json({ error }));
 });
 
 // READ A SPECIFIC TRAIL
@@ -390,9 +353,7 @@ app.get('/api/v1/trails/:id', (req, res) => {
       }
       return res.status(200).json(trail);
     })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .catch(error => res.status(500).json({ error }));
 });
 
 // CREATE NEW TRAIL
@@ -416,12 +377,8 @@ app.post('/api/v1/trails', checkAdmin, (req, res) => {
 
   db('resorts').where(newTrail.resort_id).select('id');
   db('trails').insert(newTrail)
-    .then(() => {
-      res.status(201).json(newTrail);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .then(() => res.status(201).json(newTrail))
+    .catch(error => res.status(500).json({ error }));
 });
 
 // UPDATE TRAIL
@@ -438,12 +395,8 @@ app.patch('/api/v1/trails/:id', checkAdmin, (req, res) => {
   if (updatedTrail.token) delete updatedTrail.token;
 
   db('trails').where({ id }).update(updatedTrail)
-    .then(() => {
-      res.status(201).json(updatedTrail);
-    })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .then(() => res.status(201).json(updatedTrail))
+    .catch(error => res.status(500).json({ error }));
   return null;
 });
 
@@ -453,16 +406,14 @@ app.delete('/api/v1/trails/:id', checkAdmin, (req, res) => {
   db('trails').where({ id }).del().returning('*')
     .then((trail) => {
       if (!trail.length) {
-        res.status(404).json({ error: `The trail with ID# ${id} was not found and could not be deleted` });
+        return res.status(404).json({ error: `The trail with ID# ${id} was not found and could not be deleted` });
       }
-      res.status(200).json({
+      return res.status(200).json({
         success: `The trail with ID# ${id} has been deleted from the database`,
         deletedTrailInfo: trail[0],
       });
     })
-    .catch((error) => {
-      res.status(500).json({ error });
-    });
+    .catch(error => res.status(500).json({ error }));
 });
 
 
