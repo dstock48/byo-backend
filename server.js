@@ -52,6 +52,34 @@ const checkAdmin = (request, response, next) => {
   return null;
 };
 
+const formatEntryCapitalization = (request, response, next) => {
+  const entry = request.body;
+  const capitalizeEntryName = (entryName) => {
+    return entryName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
+  if (entry.state_name) {
+    entry.state_name = capitalizeEntryName(entry.state_name);
+  }
+  next();
+};
+
+const checkStateAbbreviationFormat = (request, response, next) => {
+  const state = request.body;
+
+  if (state.state_abbreviation) {
+    state.state_abbreviation = state.state_abbreviation.toUpperCase();
+
+    if (state.state_abbreviation.length !== 2) {
+      return response.status(422).json({
+        error: 'State abbreviations must be exactly 2 characters.',
+      });
+    }
+    next();
+  }
+  return null;
+};
+
 
 // /////////////////////////////////////////////////////////////////
 // BIND MIDDLEWARE  ////////////////////////////////////////////////
@@ -59,8 +87,8 @@ const checkAdmin = (request, response, next) => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(checkAuth);
 app.use(express.static('public'));
+app.use(checkAuth);
 
 
 // /////////////////////////////////////////////////////////////////
@@ -128,7 +156,7 @@ app.get('/api/v1/states/:id/resorts', (req, res) => {
 });
 
 // CREATE NEW STATE
-app.post('/api/v1/states', checkAdmin, (req, res) => {
+app.post('/api/v1/states', checkAdmin, formatEntryCapitalization, checkStateAbbreviationFormat, (req, res) => {
   const newState = req.body;
   const requiredParameter = ['state_name', 'state_abbreviation'];
 
@@ -138,20 +166,8 @@ app.post('/api/v1/states', checkAdmin, (req, res) => {
         error: `Missing required parameter ${param}.`,
       });
     }
-    if (newState.state_abbreviation.length !== 2) {
-      return res.status(422).json({
-        error: 'State abbreviations must be exactly 2 characters.',
-      });
-    }
     return null;
   });
-
-  const capitalizeState = (state) => {
-    return state.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-  };
-
-  newState.state_abbreviation = newState.state_abbreviation.toUpperCase();
-  newState.state_name = capitalizeState(newState.state_name);
 
   if (newState.token) delete newState.token;
 
@@ -165,30 +181,14 @@ app.post('/api/v1/states', checkAdmin, (req, res) => {
 });
 
 // UPDATE STATE
-app.patch('/api/v1/states/:id', checkAdmin, (req, res) => {
+app.patch('/api/v1/states/:id', checkAdmin, formatEntryCapitalization, checkStateAbbreviationFormat, (req, res) => {
   const { id } = req.params;
   const updatedState = req.body;
-
-  if (updatedState.state_abbreviation) {
-    updatedState.state_abbreviation = updatedState.state_abbreviation.toUpperCase();
-    if (updatedState.state_abbreviation.length !== 2) {
-      return res.status(422).json({
-        error: 'State abbreviations must be exactly 2 characters.',
-      });
-    }
-  }
 
   if (updatedState.id) {
     return res.status(422).json({
       error: 'You cannot change the ID.',
     });
-  }
-
-  if (updatedState.state_name) {
-    const capitalizeState = (state) => {
-      return state.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    };
-    updatedState.state_name = capitalizeState(updatedState.state_name);
   }
 
   if (updatedState.token) delete updatedState.token;
