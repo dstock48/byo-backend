@@ -487,16 +487,22 @@ describe('API routes', () => {
       };
 
       chai.request(server)
-        .post('/api/v1/resorts')
-        .send(newResort)
-        .end((err, res) => {
-          res.should.have.status(201);
+        .get('/api/v1/resorts')
+        .end((err1, res1) => {
+          res1.body.should.have.length(332);
 
           chai.request(server)
-            .get('/api/v1/resorts')
-            .end((error, resp) => {
-              resp.body.should.have.length(333);
-              done();
+            .post('/api/v1/resorts')
+            .send(newResort)
+            .end((err2, res2) => {
+              res2.should.have.status(201);
+
+              chai.request(server)
+                .get('/api/v1/resorts')
+                .end((err3, res3) => {
+                  res3.body.should.have.length(333);
+                  done();
+                });
             });
         });
     });
@@ -576,6 +582,15 @@ describe('API routes', () => {
                     });
                 });
             });
+        });
+    });
+    it('should return an error when trying to delete a record that does not exist', (done) => {
+      chai.request(server)
+        .delete('/api/v1/resorts/999')
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.eql({ error: 'The resort with ID# 999 was not found and could not be deleted' });
+          done();
         });
     });
   });
