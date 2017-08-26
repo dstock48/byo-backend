@@ -88,13 +88,8 @@ const checkStateAbbreviationFormat = (request, response, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use(checkAuth);
 
-
-// /////////////////////////////////////////////////////////////////
-// JSON WEB TOKEN AUTH  ////////////////////////////////////////////
-// /////////////////////////////////////////////////////////////////
-
+// JSON WEB TOKEN AUTH
 app.post('/api/v1/auth', (req, res) => {
   const { email, appName } = req.body;
   const admin = email.endsWith('@turing.io');
@@ -102,6 +97,8 @@ app.post('/api/v1/auth', (req, res) => {
 
   res.status(201).json({ token });
 });
+
+app.use(checkAuth);
 
 
 // /////////////////////////////////////////////////////////////////
