@@ -258,7 +258,10 @@ app.patch('/api/v1/resorts/:id', (req, res) => {
 
   db('resorts').where('id', id).update(updatedResort, '*')
     .then((resort) => {
-      res.status(201).json(resort);
+      if (!resort.length) {
+        return res.status(404).json({ error: `The resort with ID# ${id} was not found and could not be updated` });
+      }
+      return res.status(201).json(resort);
     })
     .catch((err) => {
       res.status(500).json({ err });
