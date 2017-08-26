@@ -594,4 +594,41 @@ describe('API routes', () => {
         });
     });
   });
+  describe('PATCH /api/v1/resorts/:id', () => {
+    it('should update a resort record with the supplied information', (done) => {
+      chai.request(server)
+        .get('/api/v1/resorts/28')
+        .end((err1, res1) => {
+          res1.body[0].resort_name.should.eql('Big Sky Resort');
+
+          chai.request(server)
+            .patch('/api/v1/resorts/28')
+            .send({ resort_name: 'Big Sky' })
+            .end((err2, res2) => {
+              res2.body[0].resort_name.should.eql('Big Sky');
+              done();
+            });
+        });
+    });
+
+    it('should return an error message if you try to update the ID property of a record', (done) => {
+      chai.request(server)
+        .patch('/api/v1/resorts/28')
+        .send({ id: '9999' })
+        .end((err, res) => {
+          res.body.should.eql({ error: 'You cannot change the ID.' });
+          done();
+        });
+    });
+
+    it('should return an error message if you try to update a resort that cannot be found', (done) => {
+      chai.request(server)
+        .patch('/api/v1/resorts/9999')
+        .send({ resort_name: 'Updated Resort Name' })
+        .end((err, res) => {
+          res.body.should.eql({ error: 'The resort with ID# 9999 was not found and could not be updated' });
+          done();
+        });
+    });
+  });
 });
