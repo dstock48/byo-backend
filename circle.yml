@@ -11,3 +11,8 @@ deployment:
     branch: master
     heroku:
       appname: winter-resort-api
+
+test:
+  override:
+    - npm run lint
+    - npm run test

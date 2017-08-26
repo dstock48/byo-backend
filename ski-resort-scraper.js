@@ -2,7 +2,7 @@ const fs = require('fs');
 const Nightmare = require('nightmare');
 
 const nightmare = Nightmare();
-const result = [];
+const results = [];
 const resortURLs = new Promise((res, rej) => {
   nightmare
     .goto('http://www.onthesnow.com/united-states/ski-resorts.html')
@@ -249,8 +249,6 @@ function scrapeResortData(url, result) {
       });
 
 
-      console.log(daysOpenLastYr);
-
       // create empty array
       const resortInfo = {
         state_name: stateName.textContent,
@@ -273,20 +271,19 @@ function scrapeResortData(url, result) {
       result.push(resort);
       return resort;
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log(err)); // eslint-disable-line no-console
 }
 
 resortURLs
-  .then(urls => Promise.all(urls.map(e => scrapeResortData(e, result))).then(data => data))
-  // .then(data => console.log(result))
+  .then(urls => Promise.all(urls.map(e => scrapeResortData(e, results))).then(data => data))
   .then((result) => {
     const output = JSON.stringify(result, null, 2);
 
     fs.writeFile('resort-data.json', output, 'utf8', (err) => {
       if (err) {
-        return console.log(err);
+        return console.log(err); // eslint-disable-line no-console
       }
-      console.log('New file created!');
+      return console.log('New file created!'); // eslint-disable-line no-console
     });
   })
-  .catch(error => console.log(error));
+  .catch(error => console.log(error)); // eslint-disable-line no-console

@@ -4,6 +4,13 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+const secretKey = process.env.SECRET_KEY;
+
+const adminToken = jwt.sign({ email: 'test@turing.io', appName: 'BYOB', admin: true }, secretKey);
+const userToken = jwt.sign({ email: 'test@gmail.com', appName: 'BYOB', admin: false }, secretKey);
 
 const should = chai.should(); //eslint-disable-line
 
@@ -46,6 +53,7 @@ describe('API routes', () => {
     it('Should return an array of states', (done) => {
       chai.request(server)
         .get('/api/v1/states')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json; //eslint-disable-line
@@ -72,6 +80,7 @@ describe('API routes', () => {
     it('SAD PATH - Should return a 404 if the get is improperly called', (done) => {
       chai.request(server)
         .get('/api/v1/state')
+        .set('authorization', userToken)
         .end((err, res) => {
           err.should.have.status(404);
           res.should.have.property('error');
@@ -85,6 +94,7 @@ describe('API routes', () => {
     it('Should return a single state based on the state abbreviation passed as a param', (done) => {
       chai.request(server)
         .get('/api/v1/states/CO')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json; //eslint-disable-line
@@ -106,6 +116,7 @@ describe('API routes', () => {
     it('Should allow a param that is case insensitive', (done) => {
       chai.request(server)
         .get('/api/v1/states/al')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json; //eslint-disable-line
@@ -118,6 +129,7 @@ describe('API routes', () => {
     it('SAD PATH - Should return a 404 with an error message if the param doesn\'t exist', (done) => {
       chai.request(server)
         .get('/api/v1/states/yt')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(404);
           res.should.be.json; //eslint-disable-line
@@ -133,6 +145,7 @@ describe('API routes', () => {
     it('Should return all resorts that are in a given state', (done) => {
       chai.request(server)
         .get('/api/v1/states/44/resorts')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json; //eslint-disable-line
@@ -177,6 +190,7 @@ describe('API routes', () => {
     it('SAD PATH - Should return a 404 status with an error message if a state does not have any resorts', (done) => {
       chai.request(server)
         .get('/api/v1/states/43/resorts')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(404);
           res.should.be.json; //eslint-disable-line
@@ -192,6 +206,7 @@ describe('API routes', () => {
     it('Should allow the addition of a new state', (done) => {
       chai.request(server)
         .post('/api/v1/states')
+        .set('authorization', adminToken)
         .send({
           state_name: 'Puerto Rico',
           state_abbreviation: 'PR',
@@ -212,6 +227,7 @@ describe('API routes', () => {
     it('Should format the state name and abbreviation properly', (done) => {
       chai.request(server)
         .post('/api/v1/states')
+        .set('authorization', adminToken)
         .send({
           state_name: 'puERtO riCo',
           state_abbreviation: 'pr',
@@ -232,6 +248,7 @@ describe('API routes', () => {
     it('SAD PATH - Should return a 500 status with an error message if a state name  already exists', (done) => {
       chai.request(server)
         .post('/api/v1/states')
+        .set('authorization', adminToken)
         .send({
           state_name: 'colorado',
           state_abbreviation: 'cl',
@@ -250,6 +267,7 @@ describe('API routes', () => {
     it('SAD PATH - Should return a 500 status with an error message if a state abbreviation already exists', (done) => {
       chai.request(server)
         .post('/api/v1/states')
+        .set('authorization', adminToken)
         .send({
           state_name: 'crazyville',
           state_abbreviation: 'co',
@@ -268,6 +286,7 @@ describe('API routes', () => {
     it('SAD PATH - Should return a 422 status with an error message if a required parameter is missing', (done) => {
       chai.request(server)
         .post('/api/v1/states')
+        .set('authorization', adminToken)
         .send({
           state_abbreviation: 'pr',
         })
@@ -284,6 +303,7 @@ describe('API routes', () => {
     it('SAD PATH - Should return a 422 status with an error message if the state abreviation is not exactly 2 characters', (done) => {
       chai.request(server)
         .post('/api/v1/states')
+        .set('authorization', adminToken)
         .send({
           state_name: 'puERtO riCo',
           state_abbreviation: 'partyrico',
@@ -301,6 +321,7 @@ describe('API routes', () => {
     it('SAD PATH - Should return a 500 status with an error message if a property is posted that doesn\'t exist in the database', (done) => {
       chai.request(server)
         .post('/api/v1/states')
+        .set('authorization', adminToken)
         .send({
           state_name: 'puERtO riCo',
           state_abbreviation: 'pr',
@@ -321,6 +342,7 @@ describe('API routes', () => {
     it('Should update one record', (done) => {
       chai.request(server)
         .patch('/api/v1/states/3')
+        .set('authorization', adminToken)
         .send({
           state_abbreviation: 'dd',
         })
@@ -341,6 +363,7 @@ describe('API routes', () => {
     it('Should return an array of all resorts', (done) => {
       chai.request(server)
         .get('/api/v1/resorts')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json;
@@ -369,6 +392,7 @@ describe('API routes', () => {
     it('Should return only the resorts from a specific state', (done) => {
       chai.request(server)
         .get('/api/v1/resorts?state_name=vermont')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json;
@@ -380,6 +404,7 @@ describe('API routes', () => {
         });
       chai.request(server)
         .get('/api/v1/resorts?state_name=montana')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.length(12);
@@ -393,6 +418,7 @@ describe('API routes', () => {
     it('Should return an error status if you do not hit the endpoint correctly', (done) => {
       chai.request(server)
         .get('/api/v1/resort') // should be 'resorts'
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -402,6 +428,7 @@ describe('API routes', () => {
     it('Should return a specific resort', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/16')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json;
@@ -411,6 +438,7 @@ describe('API routes', () => {
         });
       chai.request(server)
         .get('/api/v1/resorts/28')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json;
@@ -424,6 +452,7 @@ describe('API routes', () => {
     it('Should return an error message and status if no resort is found', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/9999')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(404);
           res.body.should.eql({ error: 'Could not find a resort with the id of 9999' });
@@ -434,6 +463,7 @@ describe('API routes', () => {
     it('Should return all trails for a specific resort', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/171/trails')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json;
@@ -461,6 +491,7 @@ describe('API routes', () => {
     it('Should return an error message and status if the resort is not found', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/9999/trails')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(404);
           res.body.should.eql({ error: 'There is no resort with an id of 9999.' });
@@ -487,16 +518,25 @@ describe('API routes', () => {
       };
 
       chai.request(server)
-        .post('/api/v1/resorts')
-        .send(newResort)
-        .end((err, res) => {
-          res.should.have.status(201);
+        .get('/api/v1/resorts')
+        .set('authorization', userToken)
+        .end((err1, res1) => {
+          res1.body.should.have.length(332);
 
           chai.request(server)
-            .get('/api/v1/resorts')
-            .end((error, resp) => {
-              resp.body.should.have.length(333);
-              done();
+            .post('/api/v1/resorts')
+            .set('authorization', adminToken)
+            .send(newResort)
+            .end((err2, res2) => {
+              res2.should.have.status(201);
+
+              chai.request(server)
+                .get('/api/v1/resorts')
+                .set('authorization', userToken)
+                .end((err3, res3) => {
+                  res3.body.should.have.length(333);
+                  done();
+                });
             });
         });
     });
@@ -519,6 +559,7 @@ describe('API routes', () => {
 
       chai.request(server)
         .post('/api/v1/resorts')
+        .set('authorization', adminToken)
         .send(newResortMissingParam)
         .end((err, res) => {
           res.body.should.eql({ error: 'Missing required parameter: projected_open_date' });
@@ -548,27 +589,32 @@ describe('API routes', () => {
 
       chai.request(server)
         .get('/api/v1/resorts')
+        .set('authorization', userToken)
         .end((err, res) => {
           res.body.length.should.eql(332);
 
           chai.request(server)
             .post('/api/v1/resorts')
+            .set('authorization', adminToken)
             .send(newResort)
             .end((err1, res1) => {
               res1.should.have.status(201);
 
               chai.request(server)
                 .get('/api/v1/resorts')
+                .set('authorization', userToken)
                 .end((err2, res2) => {
                   res2.body.should.have.length(333);
 
                   chai.request(server)
                     .delete('/api/v1/resorts/333')
+                    .set('authorization', adminToken)
                     .end((err3, res3) => {
                       res3.body.success.should.eql('The resort with ID# 333 has been deleted from the database');
 
                       chai.request(server)
                         .get('/api/v1/resorts')
+                        .set('authorization', userToken)
                         .end((err4, res4) => {
                           res4.body.should.have.length(332);
                           done();
@@ -576,6 +622,57 @@ describe('API routes', () => {
                     });
                 });
             });
+        });
+    });
+    it('should return an error when trying to delete a record that does not exist', (done) => {
+      chai.request(server)
+        .delete('/api/v1/resorts/999')
+        .set('authorization', adminToken)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.eql({ error: 'The resort with ID# 999 was not found and could not be deleted' });
+          done();
+        });
+    });
+  });
+  describe('PATCH /api/v1/resorts/:id', () => {
+    it('should update a resort record with the supplied information', (done) => {
+      chai.request(server)
+        .get('/api/v1/resorts/28')
+        .set('authorization', userToken)
+        .end((err1, res1) => {
+          res1.body[0].resort_name.should.eql('Big Sky Resort');
+
+          chai.request(server)
+            .patch('/api/v1/resorts/28')
+            .set('authorization', adminToken)
+            .send({ resort_name: 'Big Sky' })
+            .end((err2, res2) => {
+              res2.body[0].resort_name.should.eql('Big Sky');
+              done();
+            });
+        });
+    });
+
+    it('should return an error message if you try to update the ID property of a record', (done) => {
+      chai.request(server)
+        .patch('/api/v1/resorts/28')
+        .set('authorization', adminToken)
+        .send({ id: '9999' })
+        .end((err, res) => {
+          res.body.should.eql({ error: 'You cannot change the ID.' });
+          done();
+        });
+    });
+
+    it('should return an error message if you try to update a resort that cannot be found', (done) => {
+      chai.request(server)
+        .patch('/api/v1/resorts/9999')
+        .set('authorization', adminToken)
+        .send({ resort_name: 'Updated Resort Name' })
+        .end((err, res) => {
+          res.body.should.eql({ error: 'The resort with ID# 9999 was not found and could not be updated' });
+          done();
         });
     });
   });
