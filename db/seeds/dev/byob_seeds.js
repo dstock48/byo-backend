@@ -20,5 +20,5 @@ exports.seed = (knex, Promise) => {
           ]);
         });
     })
-    .catch(err => console.log('ERROR: ', err));
+    .catch(err => console.log('ERROR: ', err)); // eslint-disable-line no-console
 };

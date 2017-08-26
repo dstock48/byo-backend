@@ -19,6 +19,7 @@ nightmare
   .then((result) => {
     const output = JSON.stringify(result, null, 2);
 
+    /* eslint-disable no-console */
     fs.writeFile('resort-urls.json', output, 'utf8', (err) => {
       if (err) {
         return console.log(err);
