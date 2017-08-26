@@ -349,9 +349,8 @@ describe('API routes', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json; //eslint-disable-line
-          res.body.should.have.property('state_abbreviation');
-          res.body.state_abbreviation.should.equal('DD');
-          res.body.should.have.property('state_abbreviation');
+          res.body[0].should.have.property('state_abbreviation');
+          res.body[0].state_abbreviation.should.equal('DD');
           res.headers.should.have.property('content-type');
           res.headers['content-type'].should.equal('application/json; charset=utf-8');
           done();
@@ -369,10 +368,10 @@ describe('API routes', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json; //eslint-disable-line
-          res.body.should.have.property('state_abbreviation');
-          res.body.state_abbreviation.should.equal('BN');
-          res.body.should.have.property('state_name');
-          res.body.state_name.should.equal('Joelandiaville');
+          res.body[0].should.have.property('state_abbreviation');
+          res.body[0].state_abbreviation.should.equal('BN');
+          res.body[0].should.have.property('state_name');
+          res.body[0].state_name.should.equal('Joelandiaville');
           res.headers.should.have.property('content-type');
           res.headers['content-type'].should.equal('application/json; charset=utf-8');
           done();
@@ -416,7 +415,7 @@ describe('API routes', () => {
   });
 
   describe('DELETE /api/v1/states/:id', () => {
-    it.only('should delete a specific record from the states table of the database', (done) => {
+    it('should delete a specific record from the states table of the database', (done) => {
       const newState = {
         state_name: 'Joeville',
         state_abbreviation: 'jv',
@@ -460,7 +459,7 @@ describe('API routes', () => {
         });
     });
 
-    it.only('SAD PATH - should return an error when trying to delete a record that does not exist', (done) => {
+    it('SAD PATH - should return an error when trying to delete a record that does not exist', (done) => {
       chai.request(server)
         .delete('/api/v1/states/327')
         .set('authorization', adminToken)
@@ -471,7 +470,7 @@ describe('API routes', () => {
         });
     });
 
-    it.only('SAD PATH - should return an error if the state has a resort linked to it', (done) => {
+    it('SAD PATH - should return an error if the state has a resort linked to it', (done) => {
       chai.request(server)
         .delete('/api/v1/states/6')
         .set('authorization', adminToken)

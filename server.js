@@ -186,7 +186,7 @@ app.patch('/api/v1/states/:id', checkAdmin, formatEntryCapitalization, checkStat
       if (!state.length) {
         return res.status(404).json({ error: `The state with ID# ${id} was not found and could not be updated` });
       }
-      return res.status(201).json(state);
+      return res.status(200).json(state);
     })
     .catch(error => res.status(500).json({ error }));
   return null;
@@ -311,7 +311,7 @@ app.patch('/api/v1/resorts/:id', checkAdmin, (req, res) => {
       if (!resort.length) {
         return res.status(404).json({ error: `The resort with ID# ${id} was not found and could not be updated` });
       }
-      return res.status(201).json(resort);
+      return res.status(200).json(resort);
     })
     .catch(err => res.status(500).json({ err }));
   return null;
@@ -400,7 +400,7 @@ app.patch('/api/v1/trails/:id', checkAdmin, (req, res) => {
   if (updatedTrail.token) delete updatedTrail.token;
 
   db('trails').where({ id }).update(updatedTrail)
-    .then(() => res.status(201).json(updatedTrail))
+    .then(() => res.status(200).json(updatedTrail))
     .catch(error => res.status(500).json({ error }));
   return null;
 });
