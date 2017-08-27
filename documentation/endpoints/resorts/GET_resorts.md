@@ -10,7 +10,8 @@ Returns a list of _**all**_ resorts in the database.
 ---
 
 ## Requires Authentication
-- A valid JWT (JSON Web Token) is required in order to access this endpoint.
+- A valid [JSON Web Token](https://winter-resort-api.herokuapp.com/) is required in order to access this endpoint.
+  - Token can be send in the following formats: **HTTP Request Header**, **HTTP Request Body**, **HTTP URL Query String**
 - Any registration email is valid to access this endpoint.
 
 ## Parameters
@@ -43,7 +44,7 @@ https://winter-resort-api.herokuapp.com/api/v1/resorts/
 ```
 
 #### Return shortened for example purpose
-```
+```json
 [
   {
       "id": 1,
