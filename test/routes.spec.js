@@ -28,7 +28,7 @@ describe('Client Routes', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.html; //eslint-disable-line
-          res.res.text.should.include('BYO-Backend');
+          res.res.text.should.include('Winter Resort API');
           done();
         });
     });
