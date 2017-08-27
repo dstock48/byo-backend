@@ -20,16 +20,11 @@ Visit our [registration page](https://winter-resort-api.herokuapp.com/) to gener
 
 ## Endpoints
 
-#### States endpoint
+#### States Endpoints
 
-`GET` states
-
-`GET` states/:state_abbreviation
-
-`GET` states/:id/resorts
-
-`POST` states
-
-`PATCH` states/:id
-
-`DELETE` states/:id
+- **[`GET` states]()**
+- **[`GET` states/:state_abbreviation]()**
+- **[`GET` states/:id/resorts]()**
+- **[`POST` states]()**
+- **[`PATCH` states/:id]()**
+- **[`DELETE` states/:id]()**
