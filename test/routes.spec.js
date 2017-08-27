@@ -77,6 +77,17 @@ describe('API routes', () => {
         });
     });
 
+    it('SAD PATH - Should return a 403 error if the user does not pass a JWT', (done) => {
+      chai.request(server)
+        .get('/api/v1/state')
+        .end((err, res) => {
+          err.should.have.status(403);
+          res.should.have.property('error');
+          res.error.text.should.include('You must be authorized to hit this endpoint');
+          done();
+        });
+    });
+
     it('SAD PATH - Should return a 404 if the get is improperly called', (done) => {
       chai.request(server)
         .get('/api/v1/state')
@@ -349,11 +360,136 @@ describe('API routes', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json; //eslint-disable-line
-          res.body.should.have.property('state_abbreviation');
-          res.body.state_abbreviation.should.equal('DD');
-          res.body.should.have.property('state_abbreviation');
+          res.body[0].should.have.property('state_abbreviation');
+          res.body[0].state_abbreviation.should.equal('DD');
           res.headers.should.have.property('content-type');
           res.headers['content-type'].should.equal('application/json; charset=utf-8');
+          done();
+        });
+    });
+
+    it('Should update multiple records', (done) => {
+      chai.request(server)
+        .patch('/api/v1/states/3')
+        .set('authorization', adminToken)
+        .send({
+          state_abbreviation: 'bn',
+          state_name: 'Joelandiaville',
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.should.be.json; //eslint-disable-line
+          res.body[0].should.have.property('state_abbreviation');
+          res.body[0].state_abbreviation.should.equal('BN');
+          res.body[0].should.have.property('state_name');
+          res.body[0].state_name.should.equal('Joelandiaville');
+          res.headers.should.have.property('content-type');
+          res.headers['content-type'].should.equal('application/json; charset=utf-8');
+          done();
+        });
+    });
+
+    it('SAD PATH - Should not allow you to update an ID', (done) => {
+      chai.request(server)
+        .patch('/api/v1/states/3')
+        .set('authorization', adminToken)
+        .send({
+          state_abbreviation: 'bn',
+          state_name: 'Joelandiaville',
+          id: 5467,
+        })
+        .end((err, res) => {
+          res.should.have.status(422);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.have.property('error');
+          res.body.error.should.equal('You cannot change the ID.');
+          done();
+        });
+    });
+
+    it('SAD PATH - Should return an error if the state does not exist', (done) => {
+      chai.request(server)
+        .patch('/api/v1/states/56')
+        .set('authorization', adminToken)
+        .send({
+          state_abbreviation: 'bn',
+          state_name: 'Joelandiaville',
+        })
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.have.property('error');
+          res.body.error.should.equal('The state with ID# 56 was not found and could not be updated');
+          done();
+        });
+    });
+  });
+
+  describe('DELETE /api/v1/states/:id', () => {
+    it('should delete a specific record from the states table of the database', (done) => {
+      const newState = {
+        state_name: 'Joeville',
+        state_abbreviation: 'jv',
+      };
+
+      chai.request(server)
+        .get('/api/v1/states')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          res.body.length.should.eql(50);
+
+          chai.request(server)
+            .post('/api/v1/states')
+            .set('authorization', adminToken)
+            .send(newState)
+            .end((err1, res1) => {
+              res1.should.have.status(201);
+
+              chai.request(server)
+                .get('/api/v1/states')
+                .set('authorization', userToken)
+                .end((err2, res2) => {
+                  res2.body.should.have.length(51);
+
+                  chai.request(server)
+                    .delete('/api/v1/states/51')
+                    .set('authorization', adminToken)
+                    .end((err3, res3) => {
+                      res3.body.success.should.eql('The state with ID# 51 has been successfully deleted!');
+
+                      chai.request(server)
+                        .get('/api/v1/states')
+                        .set('authorization', userToken)
+                        .end((err4, res4) => {
+                          res4.body.should.have.length(50);
+                          done();
+                        });
+                    });
+                });
+            });
+        });
+    });
+
+    it('SAD PATH - should return an error when trying to delete a record that does not exist', (done) => {
+      chai.request(server)
+        .delete('/api/v1/states/327')
+        .set('authorization', adminToken)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.eql({ error: 'The state with ID# 327 was not found and could not be deleted' });
+          done();
+        });
+    });
+
+    it('SAD PATH - should return an error if the state has a resort linked to it', (done) => {
+      chai.request(server)
+        .delete('/api/v1/states/6')
+        .set('authorization', adminToken)
+        .end((err, res) => {
+          res.should.have.status(500);
+          res.body.should.have.property('error');
+          res.body.error.should.have.property('detail');
+          res.body.error.detail.should.equal('Key (id)=(6) is still referenced from table "resorts".');
           done();
         });
     });
@@ -499,6 +635,7 @@ describe('API routes', () => {
         });
     });
   });
+
   describe('POST /api/v1/resorts', () => {
     it('should add a new resort to the resorts table in the database', (done) => {
       const newResort = {
@@ -624,6 +761,7 @@ describe('API routes', () => {
             });
         });
     });
+
     it('should return an error when trying to delete a record that does not exist', (done) => {
       chai.request(server)
         .delete('/api/v1/resorts/999')
@@ -635,6 +773,7 @@ describe('API routes', () => {
         });
     });
   });
+
   describe('PATCH /api/v1/resorts/:id', () => {
     it('should update a resort record with the supplied information', (done) => {
       chai.request(server)
@@ -672,6 +811,59 @@ describe('API routes', () => {
         .send({ resort_name: 'Updated Resort Name' })
         .end((err, res) => {
           res.body.should.eql({ error: 'The resort with ID# 9999 was not found and could not be updated' });
+          done();
+        });
+    });
+  });
+
+  describe('GET /api/v1/trails', () => {
+    it('Should return an array of trails', (done) => {
+      chai.request(server)
+        .get('/api/v1/trails')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.should.be.json; //eslint-disable-line
+          res.body.should.be.a('array');
+          res.body.length.should.equal(6);
+          res.body.forEach((state) => {
+            state.should.have.property('id');
+            state.id.should.not.be.NaN; //eslint-disable-line
+            state.should.have.property('trail_name');
+            state.should.have.property('trail_difficulty');
+            state.should.have.property('trail_length');
+            state.should.have.property('open');
+            state.should.have.property('resort_id');
+            state.should.have.property('resort_name');
+            state.should.have.property('created_at');
+            state.should.have.property('updated_at');
+          });
+          res.body[0].id.should.equal(1);
+          res.body[0].trail_name.should.equal('Super Duper Trooper Trail');
+          res.body[0].trail_difficulty.should.equal('Advanced');
+          res.body[0].trail_length.should.equal('3.50');
+          res.body[0].open.should.equal(true);
+          res.body[0].resort_id.should.equal(304);
+          res.body[0].resort_name.should.equal('Vail');
+          res.body[4].id.should.equal(5);
+          res.body[4].trail_name.should.equal('You Will DIE!');
+          res.body[4].trail_difficulty.should.equal('Expert');
+          res.body[4].trail_length.should.equal('7.85');
+          res.body[4].open.should.equal(false);
+          res.body[4].resort_id.should.equal(28);
+          res.body[4].resort_name.should.equal('Big Sky Resort');
+          done();
+        });
+    });
+
+    it('SAD PATH - Should return a 404 if the get is improperly called', (done) => {
+      chai.request(server)
+        .get('/api/v1/trail')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          err.should.have.status(404);
+          res.should.have.property('error');
+          res.error.text.should.include('Cannot GET /api/v1/trail');
           done();
         });
     });
