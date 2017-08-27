@@ -25,12 +25,8 @@ body {
   background-blend-mode: luminosity;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-}
-
 input {
+  display: block;
   height: 40px;
   width: 250px;
   font-size: 18px;
@@ -45,6 +41,7 @@ input:focus {
 }
 
 label {
+  display: block;
   margin-bottom: 3px;
   font-weight: bold;
   font-size: 14px;
@@ -73,6 +70,7 @@ label {
 }
 
 button {
+  display: block;
   margin: 0 auto;
   padding: 5px;
   border: 4px solid #000;
