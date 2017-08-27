@@ -28,3 +28,20 @@ Visit our [registration page](https://winter-resort-api.herokuapp.com/) to gener
 - **[`POST` states]()**
 - **[`PATCH` states/:id]()**
 - **[`DELETE` states/:id]()**
+
+#### Resorts endpoint
+
+- **[`GET` resorts]()**
+- **[`GET` resorts/:id]()**
+- **[`GET` resorts/:id/trails]()**
+- **[`POST` resorts]()**
+- **[`PATCH` resorts/:id]()**
+- **[`DELETE` resorts/:id]()**
+
+#### Resorts endpoint
+
+- **[`GET` trails]()**
+- **[`GET` trails/:id]()**
+- **[`POST` trails]()**
+- **[`PATCH` trails/:id]()**
+- **[`DELETE` trails/:id]()**
