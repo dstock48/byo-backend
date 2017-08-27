@@ -24,7 +24,7 @@ const checkAuth = (request, response, next) => {
   try {
     authorized = jwt.verify(token, secretKey);
   } catch (err) {
-    response.status(403).json({ error: 'Invalid token' });
+    return response.status(403).json({ error: 'Invalid token' });
   }
   if (authorized) {
     next();
@@ -42,12 +42,12 @@ const checkAdmin = (request, response, next) => {
   try {
     authorized = jwt.verify(token, secretKey);
   } catch (err) {
-    response.status(403).json({ error: 'Invalid token' });
+    return response.status(403).json({ error: 'Invalid token' });
   }
   if (authorized.admin) {
     next();
   } else {
-    response.status(403).json({ error: 'You must be an admin to hit this endpoint' });
+    return response.status(403).json({ error: 'You must be an admin to hit this endpoint' });
   }
   return null;
 };
@@ -151,16 +151,14 @@ app.post('/api/v1/states', checkAdmin, formatEntryCapitalization, checkStateAbbr
 
   requiredParameter.forEach((param) => {
     if (!newState[param]) {
-      return res.status(422).json({
-        error: `Missing required parameter ${param}.`,
-      });
+      return res.status(422).json({ error: `Missing required parameter: ${param}` });
     }
     return null;
   });
 
   if (newState.token) delete newState.token;
 
-  db('states').insert(newState, 'id')
+  db('states').insert(newState)
     .then(() => res.status(201).json(newState))
     .catch(error => res.status(500).json({ error }));
 });
@@ -350,7 +348,7 @@ app.get('/api/v1/trails/:id', (req, res) => {
     .then((trail) => {
       if (!trail.length) {
         return res.status(404).json({
-          error: `Could not find a trail with a trail with the id of ${id}`,
+          error: `Could not find a trail with the id of ${id}`,
         });
       }
       return res.status(200).json(trail);
@@ -365,15 +363,10 @@ app.post('/api/v1/trails', checkAdmin, (req, res) => {
 
   requiredParameter.forEach((param) => {
     if (!newTrail[param]) {
-      return res.status(422).json({
-        error: `Missing required parameter ${param}.`,
-      });
+      return res.status(422).json({ error: `Missing required parameter: ${param}` });
     }
     return null;
   });
-
-  newTrail.trail_name = newTrail.trail_name.charAt(0).toUpperCase() +
-  newTrail.trail_name.slice(1).toLowerCase();
 
   if (newTrail.token) delete newTrail.token;
 
@@ -396,8 +389,13 @@ app.patch('/api/v1/trails/:id', checkAdmin, (req, res) => {
 
   if (updatedTrail.token) delete updatedTrail.token;
 
-  db('trails').where({ id }).update(updatedTrail)
-    .then(() => res.status(200).json(updatedTrail))
+  db('trails').where({ id }).update(updatedTrail, '*')
+    .then((trail) => {
+      if (!trail.length) {
+        return res.status(404).json({ error: `The trail with ID# ${id} was not found and could not be updated` });
+      }
+      return res.status(200).json(trail);
+    })
     .catch(error => res.status(500).json({ error }));
   return null;
 });
