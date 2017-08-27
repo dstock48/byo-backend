@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-unused-vars */
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -22,7 +20,7 @@ chai.use(chaiHttp);
 
 describe('Client Routes', () => {
   describe('GET /', () => {
-    it.skip('Should return the home page with text', (done) => {
+    it('Should return the home page with text', (done) => {
       chai.request(server)
         .get('/')
         .end((err, res) => {
@@ -50,7 +48,7 @@ describe('API routes', () => {
   });
 
   describe('GET /api/v1/states', () => {
-    it.skip('Should return an array of states', (done) => {
+    it('Should return an array of states', (done) => {
       chai.request(server)
         .get('/api/v1/states')
         .set('authorization', userToken)
@@ -77,7 +75,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return a 404 if the get is improperly called', (done) => {
+    it('SAD PATH - Should return a 404 if the get is improperly called', (done) => {
       chai.request(server)
         .get('/api/v1/state')
         .set('authorization', userToken)
@@ -90,8 +88,8 @@ describe('API routes', () => {
     });
   });
 
-  describe('GET /api/v1/states:/stateAbbreviation', () => {
-    it.skip('Should return a single state based on the state abbreviation passed as a param', (done) => {
+  describe('GET /api/v1/states/:stateAbbreviation', () => {
+    it('Should return a single state based on the state abbreviation passed as a param', (done) => {
       chai.request(server)
         .get('/api/v1/states/CO')
         .set('authorization', userToken)
@@ -113,7 +111,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should allow a param that is case insensitive', (done) => {
+    it('Should allow a param that is case insensitive', (done) => {
       chai.request(server)
         .get('/api/v1/states/al')
         .set('authorization', userToken)
@@ -126,7 +124,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return a 404 with an error message if the param doesn\'t exist', (done) => {
+    it('SAD PATH - Should return a 404 with an error message if the param doesn\'t exist', (done) => {
       chai.request(server)
         .get('/api/v1/states/yt')
         .set('authorization', userToken)
@@ -142,7 +140,7 @@ describe('API routes', () => {
   });
 
   describe('GET /api/v1/states/:id/resorts', () => {
-    it.skip('Should return all resorts that are in a given state', (done) => {
+    it('Should return all resorts that are in a given state', (done) => {
       chai.request(server)
         .get('/api/v1/states/44/resorts')
         .set('authorization', userToken)
@@ -187,7 +185,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return a 404 status with an error message if a state does not have any resorts', (done) => {
+    it('SAD PATH - Should return a 404 status with an error message if a state does not have any resorts', (done) => {
       chai.request(server)
         .get('/api/v1/states/43/resorts')
         .set('authorization', userToken)
@@ -203,7 +201,7 @@ describe('API routes', () => {
   });
 
   describe('POST /api/v1/states', () => {
-    it.skip('Should allow the addition of a new state', (done) => {
+    it('Should allow the addition of a new state', (done) => {
       chai.request(server)
         .post('/api/v1/states')
         .set('authorization', adminToken)
@@ -224,7 +222,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should format the state name and abbreviation properly', (done) => {
+    it('Should format the state name and abbreviation properly', (done) => {
       chai.request(server)
         .post('/api/v1/states')
         .set('authorization', adminToken)
@@ -245,7 +243,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return a 500 status with an error message if a state name  already exists', (done) => {
+    it('SAD PATH - Should return a 500 status with an error message if a state name  already exists', (done) => {
       chai.request(server)
         .post('/api/v1/states')
         .set('authorization', adminToken)
@@ -264,7 +262,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return a 500 status with an error message if a state abbreviation already exists', (done) => {
+    it('SAD PATH - Should return a 500 status with an error message if a state abbreviation already exists', (done) => {
       chai.request(server)
         .post('/api/v1/states')
         .set('authorization', adminToken)
@@ -283,7 +281,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return a 422 status with an error message if a required parameter is missing', (done) => {
+    it('SAD PATH - Should return a 422 status with an error message if a required parameter is missing', (done) => {
       chai.request(server)
         .post('/api/v1/states')
         .set('authorization', adminToken)
@@ -300,7 +298,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return a 422 status with an error message if the state abreviation is not exactly 2 characters', (done) => {
+    it('SAD PATH - Should return a 422 status with an error message if the state abreviation is not exactly 2 characters', (done) => {
       chai.request(server)
         .post('/api/v1/states')
         .set('authorization', adminToken)
@@ -318,7 +316,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return a 500 status with an error message if a property is posted that doesn\'t exist in the database', (done) => {
+    it('SAD PATH - Should return a 500 status with an error message if a property is posted that doesn\'t exist in the database', (done) => {
       chai.request(server)
         .post('/api/v1/states')
         .set('authorization', adminToken)
@@ -339,7 +337,7 @@ describe('API routes', () => {
   });
 
   describe('PATCH /api/v1/states/:id', () => {
-    it.skip('Should update one record', (done) => {
+    it('Should update one record', (done) => {
       chai.request(server)
         .patch('/api/v1/states/3')
         .set('authorization', adminToken)
@@ -357,7 +355,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should update multiple records', (done) => {
+    it('Should update multiple records', (done) => {
       chai.request(server)
         .patch('/api/v1/states/3')
         .set('authorization', adminToken)
@@ -378,7 +376,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should not allow you to update an ID', (done) => {
+    it('SAD PATH - Should not allow you to update an ID', (done) => {
       chai.request(server)
         .patch('/api/v1/states/3')
         .set('authorization', adminToken)
@@ -396,7 +394,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - Should return an error if the state does not exist', (done) => {
+    it('SAD PATH - Should return an error if the state does not exist', (done) => {
       chai.request(server)
         .patch('/api/v1/states/56')
         .set('authorization', adminToken)
@@ -415,7 +413,7 @@ describe('API routes', () => {
   });
 
   describe('DELETE /api/v1/states/:id', () => {
-    it.skip('should delete a specific record from the states table of the database', (done) => {
+    it('should delete a specific record from the states table of the database', (done) => {
       const newState = {
         state_name: 'Joeville',
         state_abbreviation: 'jv',
@@ -459,7 +457,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - should return an error when trying to delete a record that does not exist', (done) => {
+    it('SAD PATH - should return an error when trying to delete a record that does not exist', (done) => {
       chai.request(server)
         .delete('/api/v1/states/327')
         .set('authorization', adminToken)
@@ -470,7 +468,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('SAD PATH - should return an error if the state has a resort linked to it', (done) => {
+    it('SAD PATH - should return an error if the state has a resort linked to it', (done) => {
       chai.request(server)
         .delete('/api/v1/states/6')
         .set('authorization', adminToken)
@@ -485,13 +483,13 @@ describe('API routes', () => {
   });
 
   describe('GET api/v1/resorts', () => {
-    it.skip('Should return an array of all resorts', (done) => {
+    it('Should return an array of all resorts', (done) => {
       chai.request(server)
         .get('/api/v1/resorts')
         .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
-          res.should.be.json;
+          res.should.be.json; //eslint-disable-line
           res.body.should.be.a('array');
           res.body.should.have.length(332);
           res.body.forEach((item) => {
@@ -514,13 +512,13 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should return only the resorts from a specific state', (done) => {
+    it('Should return only the resorts from a specific state', (done) => {
       chai.request(server)
         .get('/api/v1/resorts?state_name=vermont')
         .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
-          res.should.be.json;
+          res.should.be.json; //eslint-disable-line
           res.body.should.be.a('array');
           res.body.should.have.length(15);
           res.body.forEach((item) => {
@@ -540,7 +538,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should return an error status if you do not hit the endpoint correctly', (done) => {
+    it('SAD PATH - Should return an error status if you do not hit the endpoint correctly', (done) => {
       chai.request(server)
         .get('/api/v1/resort') // should be 'resorts'
         .set('authorization', userToken)
@@ -550,13 +548,13 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should return a specific resort', (done) => {
+    it('Should return a specific resort', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/16')
         .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
-          res.should.be.json;
+          res.should.be.json; //eslint-disable-line
           res.body.should.have.length(1);
           res.body[0].state_name.should.eql('colorado');
           res.body[0].resort_name.should.eql('Aspen / Snowmass');
@@ -566,7 +564,7 @@ describe('API routes', () => {
         .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
-          res.should.be.json;
+          res.should.be.json; //eslint-disable-line
           res.body.should.have.length(1);
           res.body[0].state_name.should.eql('montana');
           res.body[0].resort_name.should.eql('Big Sky Resort');
@@ -574,7 +572,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should return an error message and status if no resort is found', (done) => {
+    it('SAD PATH - Should return an error message and status if no resort is found', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/9999')
         .set('authorization', userToken)
@@ -585,13 +583,13 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should return all trails for a specific resort', (done) => {
+    it('Should return all trails for a specific resort', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/171/trails')
         .set('authorization', userToken)
         .end((err, res) => {
           res.should.have.status(200);
-          res.should.be.json;
+          res.should.be.json; //eslint-disable-line
           res.body.should.have.length(3);
           res.body.forEach((item) => {
             item.should.have.property('trail_name');
@@ -613,7 +611,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('Should return an error message and status if the resort is not found', (done) => {
+    it('SAD PATH - Should return an error message and status if the resort is not found', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/9999/trails')
         .set('authorization', userToken)
@@ -626,7 +624,7 @@ describe('API routes', () => {
   });
 
   describe('POST /api/v1/resorts', () => {
-    it.skip('should add a new resort to the resorts table in the database', (done) => {
+    it('should add a new resort to the resorts table in the database', (done) => {
       const newResort = {
         resort_name: 'New Resort',
         state_name: 'colorado',
@@ -667,7 +665,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('should return an error when not provide all required parameters', (done) => {
+    it('SAD PATH - Should return an error when not provide all required parameters', (done) => {
       const newResortMissingParam = {
         resort_name: 'New Resort',
         state_name: 'colorado',
@@ -696,7 +694,7 @@ describe('API routes', () => {
   });
 
   describe('DELETE /api/v1/resorts/:id', () => {
-    it.skip('should delete a specific record from the resorts table of the database', (done) => {
+    it('should delete a specific record from the resorts table of the database', (done) => {
       const newResort = {
         resort_name: 'New Resort',
         state_name: 'colorado',
@@ -751,7 +749,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('should return an error when trying to delete a record that does not exist', (done) => {
+    it('SAD PATH - Should return an error when trying to delete a record that does not exist', (done) => {
       chai.request(server)
         .delete('/api/v1/resorts/999')
         .set('authorization', adminToken)
@@ -764,7 +762,7 @@ describe('API routes', () => {
   });
 
   describe('PATCH /api/v1/resorts/:id', () => {
-    it.skip('should update a resort record with the supplied information', (done) => {
+    it('should update a resort record with the supplied information', (done) => {
       chai.request(server)
         .get('/api/v1/resorts/28')
         .set('authorization', userToken)
@@ -782,7 +780,7 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('should return an error message if you try to update the ID property of a record', (done) => {
+    it('SAD PATH - Should return an error message if you try to update the ID property of a record', (done) => {
       chai.request(server)
         .patch('/api/v1/resorts/28')
         .set('authorization', adminToken)
@@ -793,66 +791,13 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('should return an error message if you try to update a resort that cannot be found', (done) => {
+    it('SAD PATH - Should return an error message if you try to update a resort that cannot be found', (done) => {
       chai.request(server)
         .patch('/api/v1/resorts/9999')
         .set('authorization', adminToken)
         .send({ resort_name: 'Updated Resort Name' })
         .end((err, res) => {
           res.body.should.eql({ error: 'The resort with ID# 9999 was not found and could not be updated' });
-          done();
-        });
-    });
-  });
-
-  describe('GET /api/v1/trails', () => {
-    it.skip('Should return an array of trails', (done) => {
-      chai.request(server)
-        .get('/api/v1/trails')
-        .set('authorization', userToken)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.should.be.json; //eslint-disable-line
-          res.body.should.be.a('array');
-          res.body.length.should.equal(6);
-          res.body.forEach((state) => {
-            state.should.have.property('id');
-            state.id.should.not.be.NaN; //eslint-disable-line
-            state.should.have.property('trail_name');
-            state.should.have.property('trail_difficulty');
-            state.should.have.property('trail_length');
-            state.should.have.property('open');
-            state.should.have.property('resort_id');
-            state.should.have.property('resort_name');
-            state.should.have.property('created_at');
-            state.should.have.property('updated_at');
-          });
-          res.body[0].id.should.equal(1);
-          res.body[0].trail_name.should.equal('Super Duper Trooper Trail');
-          res.body[0].trail_difficulty.should.equal('Advanced');
-          res.body[0].trail_length.should.equal('3.50');
-          res.body[0].open.should.equal(true);
-          res.body[0].resort_id.should.equal(304);
-          res.body[0].resort_name.should.equal('Vail');
-          res.body[4].id.should.equal(5);
-          res.body[4].trail_name.should.equal('You Will DIE!');
-          res.body[4].trail_difficulty.should.equal('Expert');
-          res.body[4].trail_length.should.equal('7.85');
-          res.body[4].open.should.equal(false);
-          res.body[4].resort_id.should.equal(28);
-          res.body[4].resort_name.should.equal('Big Sky Resort');
-          done();
-        });
-    });
-
-    it.skip('SAD PATH - Should return a 404 if the get is improperly called', (done) => {
-      chai.request(server)
-        .get('/api/v1/trail')
-        .set('authorization', userToken)
-        .end((err, res) => {
-          err.should.have.status(404);
-          res.should.have.property('error');
-          res.error.text.should.include('Cannot GET /api/v1/trail');
           done();
         });
     });

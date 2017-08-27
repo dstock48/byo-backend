@@ -5,10 +5,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const secretKey = process.env.SECRET_KEY;
-
-const adminToken = jwt.sign({ email: 'test@turing.io', appName: 'BYOB', admin: true }, secretKey);
 const userToken = jwt.sign({ email: 'test@gmail.com', appName: 'BYOB', admin: false }, secretKey);
-
 const should = chai.should(); //eslint-disable-line
 
 const environment = process.env.NODE_ENV || 'development';
