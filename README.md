@@ -29,7 +29,7 @@ Visit our [registration page](https://winter-resort-api.herokuapp.com/) to gener
 - **[`PATCH` states/:id]()**
 - **[`DELETE` states/:id]()**
 
-#### Resorts endpoint
+#### Resorts Endpoints
 
 - **[`GET` resorts]()**
 - **[`GET` resorts/:id]()**
@@ -38,7 +38,7 @@ Visit our [registration page](https://winter-resort-api.herokuapp.com/) to gener
 - **[`PATCH` resorts/:id]()**
 - **[`DELETE` resorts/:id]()**
 
-#### Resorts endpoint
+#### Resorts Endpoints
 
 - **[`GET` trails]()**
 - **[`GET` trails/:id]()**
