@@ -14,3 +14,6 @@ Version 1 of the API returns all data in JSON format and includes access to `Res
 | Days Open Last year          |                  |
 | Summit & Base Elevation      |                  |
 | Trail Difficulty Percentages |                  |
+
+## Registration
+Visit our [registration page](https://winter-resort-api.herokuapp.com/) to generate a new access token for the Winter Resort API. All access tokens will expire 1 year after the token has been generated, after which another token must be generated.
