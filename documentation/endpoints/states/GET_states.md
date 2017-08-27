@@ -6,18 +6,18 @@ GET states
 
 ## Description
 
-Returns all of the states in the database.
+Returns _**all**_ of the states in the database.
 
 --------------------------------------------------------------------------------
 
 ## Requires authentication
 
-**A valid [Json Web Token](https://winter-resort-api.herokuapp.com/) must be passed in through one of the following:**
-
-- HTTP Request Header
-- HTTP Request Body
-- HTTP URL Query String
-
+- A valid [JSON Web Token](https://winter-resort-api.herokuapp.com/) is required in order to access this endpoint.
+  - Token can be sent in the following formats:
+    - **HTTP Request Header**
+    - **HTTP Request Body**
+    - **HTTP URL Query String**
+- Any registration email is valid to access this endpoint.
 --------------------------------------------------------------------------------
 
 ## Parameters
@@ -28,7 +28,13 @@ There are no parameters necessary for this endpoint.
 
 ## Return format
 
-Current states in database in full format.
+An array of objects with the following keys and values:
+
+- **id** - Auto-incrementing ID number for the record in the database.
+- **state_name** - Name of state.
+- **state_abbreviation** - 2 letter abbreviation of the state.
+- **created_at** — Date the record was created in the database.
+- **updated_at** — Date the record was updated in the database.
 
 ## Example
 
@@ -38,7 +44,7 @@ Current states in database in full format.
 https://winter-resort-api.herokuapp.com/api/v1/states
 ```
 
-**Return**
+**Return shortened for example purpose**
 
 ```json
 [
