@@ -82,6 +82,6 @@ https://winter-resort-api.herokuapp.com/api/v1/states
     "state_abbreviation": "CA",
     "created_at": "2017-08-25T23:34:09.962Z",
     "updated_at": "2017-08-25T23:34:09.962Z"
-  }, ...
+  }, …
 ]
 ```
