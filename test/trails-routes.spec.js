@@ -168,7 +168,7 @@ describe('API trails routes - /api/v1/trails', () => {
           res.should.be.json; //eslint-disable-line
           res.body.should.be.a('object');
           res.body.should.have.property('error');
-          res.body.error.should.equal('Missing required parameter trail_difficulty.');
+          res.body.error.should.equal('Missing required parameter: trail_difficulty');
           done();
         });
     });

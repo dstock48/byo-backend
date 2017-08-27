@@ -24,7 +24,7 @@ const checkAuth = (request, response, next) => {
   try {
     authorized = jwt.verify(token, secretKey);
   } catch (err) {
-    response.status(403).json({ error: 'Invalid token' });
+    return response.status(403).json({ error: 'Invalid token' });
   }
   if (authorized) {
     next();
@@ -42,12 +42,12 @@ const checkAdmin = (request, response, next) => {
   try {
     authorized = jwt.verify(token, secretKey);
   } catch (err) {
-    response.status(403).json({ error: 'Invalid token' });
+    return response.status(403).json({ error: 'Invalid token' });
   }
   if (authorized.admin) {
     next();
   } else {
-    response.status(403).json({ error: 'You must be an admin to hit this endpoint' });
+    return response.status(403).json({ error: 'You must be an admin to hit this endpoint' });
   }
   return null;
 };
@@ -151,16 +151,14 @@ app.post('/api/v1/states', checkAdmin, formatEntryCapitalization, checkStateAbbr
 
   requiredParameter.forEach((param) => {
     if (!newState[param]) {
-      return res.status(422).json({
-        error: `Missing required parameter ${param}.`,
-      });
+      return res.status(422).json({ error: `Missing required parameter: ${param}` });
     }
     return null;
   });
 
   if (newState.token) delete newState.token;
 
-  db('states').insert(newState, 'id')
+  db('states').insert(newState)
     .then(() => res.status(201).json(newState))
     .catch(error => res.status(500).json({ error }));
 });
@@ -365,9 +363,7 @@ app.post('/api/v1/trails', checkAdmin, (req, res) => {
 
   requiredParameter.forEach((param) => {
     if (!newTrail[param]) {
-      return res.status(422).json({
-        error: `Missing required parameter ${param}.`,
-      });
+      return res.status(422).json({ error: `Missing required parameter: ${param}` });
     }
     return null;
   });
