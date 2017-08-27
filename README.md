@@ -22,26 +22,26 @@ Visit our [registration page](https://winter-resort-api.herokuapp.com/) to gener
 
 #### States Endpoints
 
-- **[`GET` states]()**
-- **[`GET` states/:state_abbreviation]()**
-- **[`GET` states/:id/resorts]()**
-- **[`POST` states]()**
-- **[`PATCH` states/:id]()**
-- **[`DELETE` states/:id]()**
+- **[`GET` states](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/states/GET_states.md)**
+- **[`GET` states/:state_abbreviation](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/states/GET_states_state_abbreviation.md)**
+- **[`GET` states/:id/resorts](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/states/GET_states_id_resorts.md)**
+- **[`POST` states](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/states/POST_states.md)**
+- **[`PATCH` states/:id](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/states/PATCH_states_id.md)**
+- **[`DELETE` states/:id](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/states/DELETE_states_id.md)**
 
 #### Resorts Endpoints
 
-- **[`GET` resorts]()**
-- **[`GET` resorts/:id]()**
-- **[`GET` resorts/:id/trails]()**
-- **[`POST` resorts]()**
-- **[`PATCH` resorts/:id]()**
-- **[`DELETE` resorts/:id]()**
+- **[`GET` resorts](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/resorts/GET_resorts.md)**
+- **[`GET` resorts/:id](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/resorts/GET_resorts_id.md)**
+- **[`GET` resorts/:id/trails](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/resorts/GET_resorts_id_trails.md)**
+- **[`POST` resorts](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/resorts/POST_resorts.md)**
+- **[`PATCH` resorts/:id](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/resorts/PATCH_resorts_id.md)**
+- **[`DELETE` resorts/:id](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/resorts/DELETE_resorts_id.md)**
 
-#### Resorts Endpoints
+#### Trails Endpoints
 
-- **[`GET` trails]()**
-- **[`GET` trails/:id]()**
-- **[`POST` trails]()**
-- **[`PATCH` trails/:id]()**
-- **[`DELETE` trails/:id]()**
+- **[`GET` trails](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/trails/GET_trails.md)**
+- **[`GET` trails/:id](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/trails/GET_trails_id.md)**
+- **[`POST` trails](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/trails/POST_trails.md)**
+- **[`PATCH` trails/:id](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/trails/PATCH_trails_id.md)**
+- **[`DELETE` trails/:id](https://github.com/dstock48/byo-backend/blob/documentation/documentation/endpoints/trails/DELETE_trails_id.md)**
