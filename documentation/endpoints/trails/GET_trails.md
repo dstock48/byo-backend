@@ -12,7 +12,7 @@ Returns _**all**_ of the trails in the database.
 
 ## Requires authentication
 
-- A valid [JSON Web Token](https://winter-resort-api.herokuapp.com/) is required in order to access this endpoint.
+- A valid [JSON Web Token](https://jwt.io/) is required in order to access this endpoint.
   - Token can be sent in the following formats:
     - **HTTP Request Header**
     - **HTTP Request Body**
