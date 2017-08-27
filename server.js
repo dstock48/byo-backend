@@ -350,7 +350,7 @@ app.get('/api/v1/trails/:id', (req, res) => {
     .then((trail) => {
       if (!trail.length) {
         return res.status(404).json({
-          error: `Could not find a trail with a trail with the id of ${id}`,
+          error: `Could not find a trail with the id of ${id}`,
         });
       }
       return res.status(200).json(trail);
@@ -371,9 +371,6 @@ app.post('/api/v1/trails', checkAdmin, (req, res) => {
     }
     return null;
   });
-
-  newTrail.trail_name = newTrail.trail_name.charAt(0).toUpperCase() +
-  newTrail.trail_name.slice(1).toLowerCase();
 
   if (newTrail.token) delete newTrail.token;
 
@@ -396,8 +393,13 @@ app.patch('/api/v1/trails/:id', checkAdmin, (req, res) => {
 
   if (updatedTrail.token) delete updatedTrail.token;
 
-  db('trails').where({ id }).update(updatedTrail)
-    .then(() => res.status(200).json(updatedTrail))
+  db('trails').where({ id }).update(updatedTrail, '*')
+    .then((trail) => {
+      if (!trail.length) {
+        return res.status(404).json({ error: `The trail with ID# ${id} was not found and could not be updated` });
+      }
+      return res.status(200).json(trail);
+    })
     .catch(error => res.status(500).json({ error }));
   return null;
 });
