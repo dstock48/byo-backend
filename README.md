@@ -2,7 +2,7 @@
 ---
 The Winter Resort API provides multiple endpoints to access data related to all major winter resorts in the United States. This API follows [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) API guidelines and is seccured using [JSON Web Tokens](https://jwt.io/) for user Authentication and Authorization.
 
-Version 1 of the API includes access to `Resorts` and `Trails` data containing the following information:
+Version 1 of the API returns all data in JSON format and includes access to `Resorts` and `Trails` data containing the following information:
 
 | Resorts                      | Trails           |
 | :--------------------------: | :--------------: |
