@@ -1,11 +1,9 @@
-const states = require('../../../states');
-const resorts = require('../../../resorts');
-const trails = require('../../../testTrails');
+const states = require('../../../web-scraping/states');
+const resorts = require('../../../web-scraping/resorts');
+const trails = require('../../../web-scraping/testTrails');
 
 exports.seed = (knex, Promise) => {
-  return knex('trails').del()
-    .then(() => knex('resorts').del())
-    .then(() => knex('states').del())
+  return knex('trails').del().then(() => knex('resorts').del()).then(() => knex('states').del())
     .then(() => {
       return Promise.all([knex('states').insert(states, '*')])
         .then((statesArray) => {
@@ -14,8 +12,7 @@ exports.seed = (knex, Promise) => {
               return state.state_name.toLowerCase() === resort.state_name.toLowerCase();
             });
             return Object.assign(resort, { states_id: parseInt(stateMatch.id) });
-          }), '*'),
-          ])
+          }), '*')])
             .then((resortsArray) => {
               return Promise.all([knex('trails').insert(trails.map((trail) => {
                 const resortMatch = resortsArray[0].find((resort) => {
@@ -25,6 +22,5 @@ exports.seed = (knex, Promise) => {
               }))]);
             });
         });
-    })
-    .catch(err => console.log('ERROR: ', err)); //eslint-disable-line
+  }).catch(err => console.log('ERROR: ', err)); //eslint-disable-line
 };
