@@ -6,9 +6,9 @@ Version 1 of the API returns all data in JSON format and includes access to `Res
 
 | States               | Resorts                      | Trails           |
 | :------------------: | :--------------------------: | :--------------: |
-| ID                   | Resort Name                  | Trail Name       |
-| State Name           | State Name                   | Resort Name      |
-| State Abbreviation   | Projected Opening Date       | Trail Difficulty |
+| State Name           | Resort Name                  | Trail Name       |
+| State Abbreviation   | State Name                   | Resort Name      |
+|                      | Projected Opening Date       | Trail Difficulty |
 |                      | Annual Snowfall              | Trail Length     |
 |                      | Trail Total                  | Open Status      |
 |                      | Days Open Last year          |                  |
