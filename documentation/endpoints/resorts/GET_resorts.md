@@ -20,6 +20,9 @@ Returns a list of _**all**_ resorts in the database.
 ## Parameters
 There are no parameters necessary for this endpoint.
 
+## Queries
+- **state_name** — Filter return down to an array of only resorts in the desired state
+
 ## Errors
 - **403 Forbidden** — The JSON Web Token was either missing from the request or was invalid.
 
@@ -44,7 +47,7 @@ An array of objects with the following keys and values:
 - **created_at** — Date the record was created in the database.
 - **updated_at** — Date the record was updated in the database.
 
-## Example
+## Examples
 
 #### Request
 ```
@@ -87,6 +90,53 @@ https://winter-resort-api.herokuapp.com/api/v1/resorts/
       "advanced_trail_percent": "0.170",
       "expert_trail_percent": "0.000",
       "states_id": 23,
+      "created_at": "2017-08-25T23:34:10.056Z",
+      "updated_at": "2017-08-25T23:34:10.056Z"
+  }
+]
+```
+---
+#### Request
+```
+https://winter-resort-api.herokuapp.com/api/v1/resorts?state_name=vermont
+```
+
+#### Return shortened for example purpose
+```json
+[
+  {
+      "id": 129,
+      "resort_name": "Jay Peak",
+      "state_name": "vermont",
+      "projected_open_date": "2017-11-24T00:00:00.000Z",
+      "annual_snowfall": 377,
+      "trail_total": 78,
+      "days_open_last_year": 155,
+      "summit_elevation": 3968,
+      "base_elevation": 1815,
+      "beginner_trail_percent": "0.200",
+      "intermediate_trail_percent": "0.400",
+      "advanced_trail_percent": "0.400",
+      "expert_trail_percent": "0.000",
+      "states_id": 45,
+      "created_at": "2017-08-25T23:34:10.056Z",
+      "updated_at": "2017-08-25T23:34:10.056Z"
+  },
+  {
+      "id": 134,
+      "resort_name": "Killington Resort",
+      "state_name": "vermont",
+      "projected_open_date": "2017-10-28T00:00:00.000Z",
+      "annual_snowfall": 250,
+      "trail_total": 155,
+      "days_open_last_year": 192,
+      "summit_elevation": 4241,
+      "base_elevation": 1165,
+      "beginner_trail_percent": "0.280",
+      "intermediate_trail_percent": "0.330",
+      "advanced_trail_percent": "0.240",
+      "expert_trail_percent": "0.150",
+      "states_id": 45,
       "created_at": "2017-08-25T23:34:10.056Z",
       "updated_at": "2017-08-25T23:34:10.056Z"
   }
