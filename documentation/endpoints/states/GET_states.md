@@ -24,6 +24,10 @@ Returns _**all**_ of the states in the database.
 
 There are no parameters necessary for this endpoint.
 
+## Errors
+
+- **403 Forbidden** — The JSON Web Token was either missing from the request or was invalid.
+
 --------------------------------------------------------------------------------
 
 ## Return format
