@@ -1,4 +1,4 @@
-# Resorts Endpoint
+# States Endpoint
 
 ```
 DELETE states/:id

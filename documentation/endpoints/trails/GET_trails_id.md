@@ -1,4 +1,4 @@
-# User Resources
+# Trails Endpoint
 
 ```
 GET trails/:id

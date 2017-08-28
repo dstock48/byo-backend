@@ -1,4 +1,4 @@
-# User Resources
+# States Endpoint
 
 ```
 GET states/:id/resorts

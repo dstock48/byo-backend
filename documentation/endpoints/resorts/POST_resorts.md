@@ -1,4 +1,4 @@
-# User Resources
+# Resorts Endpoint
 
 ```
 POST resorts

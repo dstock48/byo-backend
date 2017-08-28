@@ -1,4 +1,4 @@
-# User Resources
+# States Endpoint
 
 ```
 POST states

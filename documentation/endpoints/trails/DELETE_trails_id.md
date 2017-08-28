@@ -1,4 +1,4 @@
-# Resorts Endpoint
+# Trails Endpoint
 
 ```
 DELETE trails/:id
