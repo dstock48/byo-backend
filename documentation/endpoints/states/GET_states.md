@@ -8,7 +8,7 @@ GET states
 
 Returns _**all**_ of the states in the database.
 
---------------------------------------------------------------------------------
+***
 
 ## Requires authentication
 
@@ -18,17 +18,19 @@ Returns _**all**_ of the states in the database.
     - **HTTP Request Body**
     - **HTTP URL Query String**
 - Any registration email is valid to access this endpoint.
---------------------------------------------------------------------------------
+***
 
 ## Parameters
 
 There are no parameters necessary for this endpoint.
 
+***
+
 ## Errors
 
 - **403 Forbidden** — The JSON Web Token was either missing from the request or was invalid.
 
---------------------------------------------------------------------------------
+***
 
 ## Return format
 
@@ -39,6 +41,8 @@ An array of objects with the following keys and values:
 - **state_abbreviation** - 2 letter abbreviation of the state.
 - **created_at** — Date the record was created in the database.
 - **updated_at** — Date the record was updated in the database.
+
+***
 
 ## Example
 

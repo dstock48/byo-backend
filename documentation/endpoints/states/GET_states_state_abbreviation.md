@@ -27,6 +27,15 @@ Returns _**all**_ information of a single state in the database.
 
 ***
 
+## Errors
+All known errors cause the resource to return HTTP error code header together with a JSON array containing at least 'status' and 'error' keys describing the source of error.
+
+- **403 Forbidden** — 'You must be authorized to hit this endpoint' - (JWT was not passed in the request)
+- **403 Forbidden** — 'Invalid token' - (invalid JWT was passed in the request)
+- **404 Not Found** — 'Could not find a state with a state abbreviation of `state_abbreviation`.'
+
+***
+
 ## Return format
 
 An array of with one object with the following keys and values:
@@ -36,15 +45,6 @@ An array of with one object with the following keys and values:
 - **state_abbreviation** - 2 letter abbreviation of the state.
 - **created_at** — Date the record was created in the database.
 - **updated_at** — Date the record was updated in the database.
-
-***
-
-## Errors
-All known errors cause the resource to return HTTP error code header together with a JSON array containing at least 'status' and 'error' keys describing the source of error.
-
-- **403 Forbidden** — 'You must be authorized to hit this endpoint' - (JWT was not passed in the request)
-- **403 Forbidden** — 'Invalid token' - (invalid JWT was passed in the request)
-- **404 Not Found** — 'Could not find a state with a state abbreviation of `state_abbreviation`.'
 
 ***
 
@@ -70,4 +70,4 @@ https://winter-resort-api.herokuapp.com/api/v1/states/6
 ]
 ```
 
-[State Abbreviations] : https://github.com/dstock48/byo-backend/blob/documentation/documentation/basics/state_abbreviations.md
+[State Abbreviations]: https://github.com/dstock48/byo-backend/blob/documentation/documentation/basics/state_abbreviations.md
