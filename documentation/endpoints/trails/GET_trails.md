@@ -111,6 +111,6 @@ https://winter-resort-api.herokuapp.com/api/v1/trails
     "resort_name": "Big Sky Resort",
     "created_at": "2017-08-27T20:59:36.503Z",
     "updated_at": "2017-08-27T20:59:36.503Z"
-  },
+  }
 ]
 ```

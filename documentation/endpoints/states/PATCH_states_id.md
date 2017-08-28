@@ -38,7 +38,7 @@ To update state you must pass in the id of the state to patch.
 
 ## Return format
 
-An array of one object (the new state) with the following keys and values:
+An array of one object (the updated state) with the following keys and values:
 
 - **id** - Auto-incrementing ID number for the record in the database.
 - **state_name** - Name of state.
