@@ -50,7 +50,7 @@ An array containing a single object matching the specified ID with the following
 https://winter-resort-api.herokuapp.com/api/v1/resorts/28
 ```
 
-#### Return shortened for example purpose
+#### Return
 ```json
 [
   {
