@@ -17,7 +17,8 @@ Creates one new state in the database.  This action is limited to admin access.
     - **HTTP Request Header**
     - **HTTP Request Body**
     - **HTTP URL Query String**
-- Only an administrative email is able to retrieve a JWT for access to this endpoint.
+- A registration email ending in **@turing.io** is required to access this endpoint.
+
 ***
 
 ## Parameters
