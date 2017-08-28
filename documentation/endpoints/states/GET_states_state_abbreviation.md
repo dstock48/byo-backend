@@ -70,4 +70,4 @@ https://winter-resort-api.herokuapp.com/api/v1/states/6
 ]
 ```
 
-[state_abbreviation] :
+[state_abbreviation] : https://github.com/dstock48/byo-backend/blob/documentation/documentation/basics/state_abbreviations.md
