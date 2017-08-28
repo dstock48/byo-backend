@@ -39,7 +39,7 @@ https://winter-resort-api.herokuapp.com/api/v1/resorts/333
   "success": "The resort with ID# 333 has been deleted from the database",
   "deletedResortInfo": {
       "id": 333,
-      "resort_name": "Example Resort NameÂ",
+      "resort_name": "Example Resort Name",
       "state_name": "washington",
       "projected_open_date": "2017-12-01T07:00:00.000Z",
       "annual_snowfall": 301,
