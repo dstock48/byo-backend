@@ -23,7 +23,7 @@ Returns _**all**_ information of a single state in the database.
 
 ## Parameters
 
-- **[state_abbreviation][]** - A two letter abbreviation of the desired state is needed to retrieve the state information.  The abbreviation is _**not**_ case sensitive.
+- **state_abbreviation** - A two letter abbreviation of the desired state is needed to retrieve the state information.  The abbreviation is _**not**_ case sensitive. [State Abbreviations][]
 
 ***
 
@@ -70,4 +70,4 @@ https://winter-resort-api.herokuapp.com/api/v1/states/6
 ]
 ```
 
-[state_abbreviation] : https://github.com/dstock48/byo-backend/blob/documentation/documentation/basics/state_abbreviations.md
+[State Abbreviations] : https://github.com/dstock48/byo-backend/blob/documentation/documentation/basics/state_abbreviations.md
