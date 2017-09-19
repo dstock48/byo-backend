@@ -18,6 +18,9 @@ Version 1 of the API returns all data in JSON format and includes access to `sta
 ## Registration
 Visit our [registration page](https://winter-resort-api.herokuapp.com/) to generate a new access token for the Winter Resort API. All access tokens will expire 1 year after the token has been generated, after which another token must be generated.
 
+![winter-resort-api-token-request](https://user-images.githubusercontent.com/20492875/30607377-f93f8a98-9d31-11e7-9d63-6443f17f7ed4.png)
+
+
 ## Endpoints
 
 #### States Endpoints
